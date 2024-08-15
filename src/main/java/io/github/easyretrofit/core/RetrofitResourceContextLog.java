@@ -29,7 +29,7 @@ public class RetrofitResourceContextLog {
                 log.info("---Retrofit Client : HostURL: {}, Retrofit instance name: {}", realHostUrl, retrofitInstanceName);
             }
             retrofitClientDebugLog(retrofitClient);
-            for (RetrofitApiInterfaceBean retrofitService : retrofitClient.getRetrofitApiServiceBeans()) {
+            for (RetrofitApiInterfaceBean retrofitService : retrofitClient.getRetrofitApiInterfaceBeans()) {
                 final Class<?> selfClazz = retrofitService.getSelfClazz();
                 final Class<?> parentClazz = retrofitService.getParentClazz();
                 String parentClazzName = null;

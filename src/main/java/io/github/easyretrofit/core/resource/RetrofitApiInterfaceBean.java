@@ -6,7 +6,9 @@ import io.github.easyretrofit.core.util.UniqueKeyUtils;
 
 import java.lang.annotation.Annotation;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.stream.Collectors;
 
 /**
@@ -18,20 +20,26 @@ public final class RetrofitApiInterfaceBean implements UniqueKey {
 
     private Class<?> selfClazz;
     private Class<?> parentClazz;
+    private LinkedHashSet<Class<?>> self2ParentClasses;
+    private LinkedHashSet<Class<?>> childrenClasses;
     private RetrofitUrl retrofitUrl;
     private RetrofitBuilderBean retrofitBuilder;
     /**
      * parent Interface interceptors
      */
-    private Set<RetrofitInterceptorBean> interceptors;
+//    private Set<RetrofitInterceptorBean> interceptors;
     private Set<RetrofitInterceptorBean> myInterceptors;
     private String retrofitClientBeanInstanceName;
     private Set<Class<? extends BaseExceptionDelegate<? extends RetrofitExtensionException>>> exceptionDelegates;
 
+    public RetrofitApiInterfaceBean() {
+        childrenClasses = new LinkedHashSet<>();
+    }
+
     public void setRetrofitClientBean(RetrofitClientBean retrofitClientBean) {
         this.retrofitClientBeanInstanceName = retrofitClientBean.getRetrofitInstanceName();
         this.retrofitBuilder = retrofitClientBean.getRetrofitBuilder();
-        this.interceptors = retrofitClientBean.getInterceptors();
+//        this.interceptors = retrofitClientBean.getInterceptors();
     }
 
     public void addExceptionDelegate(Class<? extends BaseExceptionDelegate<? extends RetrofitExtensionException>> clazz) {
@@ -91,13 +99,28 @@ public final class RetrofitApiInterfaceBean implements UniqueKey {
         this.retrofitBuilder = retrofitBuilder;
     }
 
-    public Set<RetrofitInterceptorBean> getInterceptors() {
-        return interceptors;
+    public LinkedHashSet<Class<?>> getSelf2ParentClasses() {
+        return self2ParentClasses;
     }
 
-    void setInterceptors(Set<RetrofitInterceptorBean> interceptors) {
-        this.interceptors = interceptors;
+    public void setSelf2ParentClasses(LinkedHashSet<Class<?>> self2ParentClasses) {
+        this.self2ParentClasses = self2ParentClasses;
     }
+
+    public LinkedHashSet<Class<?>> getChildrenClasses() {
+        return childrenClasses;
+    }
+
+    public void setChildrenClasses(LinkedHashSet<Class<?>> childrenClasses) {
+        this.childrenClasses = childrenClasses;
+    }
+    //    public Set<RetrofitInterceptorBean> getInterceptors() {
+//        return interceptors;
+//    }
+//
+//    void setInterceptors(Set<RetrofitInterceptorBean> interceptors) {
+//        this.interceptors = interceptors;
+//    }
 
     public Set<RetrofitInterceptorBean> getMyInterceptors() {
         return myInterceptors;
@@ -117,10 +140,10 @@ public final class RetrofitApiInterfaceBean implements UniqueKey {
 
     @Override
     public String toString() {
-        String interceptorStr = null;
-        if (interceptors != null) {
-            interceptorStr = interceptors.stream().map(RetrofitInterceptorBean::toString).collect(Collectors.joining(","));
-        }
+//        String interceptorStr = null;
+//        if (interceptors != null) {
+//            interceptorStr = interceptors.stream().map(RetrofitInterceptorBean::toString).collect(Collectors.joining(","));
+//        }
         String myInterceptorStr = null;
         if (myInterceptors != null) {
             myInterceptorStr = myInterceptors.stream().map(RetrofitInterceptorBean::toString).collect(Collectors.joining(","));
@@ -134,7 +157,7 @@ public final class RetrofitApiInterfaceBean implements UniqueKey {
                 ", parentClazz=" + parentClazz +
                 ", retrofitUrl=" + retrofitUrl.toString() +
                 ", retrofitBuilder=" + retrofitBuilder.toString() +
-                ", interceptors=" + interceptorStr +
+//                ", interceptors=" + interceptorStr +
                 ", myInterceptors=" + myInterceptorStr +
                 ", exceptionDelegates=" + exceptionDelegateStr +
                 '}';
@@ -144,4 +167,5 @@ public final class RetrofitApiInterfaceBean implements UniqueKey {
     public String generateUniqueKey() {
         return UniqueKeyUtils.generateUniqueKey(this.toString());
     }
+
 }

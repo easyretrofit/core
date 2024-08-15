@@ -36,24 +36,23 @@ public class RetrofitApiInterfaceBeanGenerator implements Generator<RetrofitApiI
 
     @Override
     public RetrofitApiInterfaceBean generate() {
-        Set<Class<?>> parentClazzSet = new LinkedHashSet<>();
+        LinkedHashSet<Class<?>> parentClazzSet = new LinkedHashSet<>();
         Class<?> retrofitBuilderClazz = getParentRetrofitBuilderClazz(parentClazzSet);
+        // create RetrofitApiInterfaceBean
         RetrofitApiInterfaceBean retrofitApiInterfaceBean = new RetrofitApiInterfaceBean();
         retrofitApiInterfaceBean.setSelfClazz(clazz);
         retrofitApiInterfaceBean.setParentClazz(retrofitBuilderClazz);
+        retrofitApiInterfaceBean.setSelf2ParentClasses(parentClazzSet);
         //将RetrofitBuilder注解信息注入到RetrofitBuilderBean中
         RetrofitBuilderBean retrofitBuilderBean = new RetrofitBuilderBean(retrofitBuilderClazz, globalRetrofitBuilderExtension);
         retrofitApiInterfaceBean.setRetrofitBuilder(retrofitBuilderBean);
-        Set<RetrofitInterceptorBean> interceptors = getInterceptors(retrofitBuilderClazz);
         Set<RetrofitInterceptorBean> myInterceptors = getInterceptors(clazz);
         if (interceptorExtensions != null) {
             for (RetrofitInterceptorExtension interceptorExtension : interceptorExtensions) {
-                addExtensionInterceptors(interceptorExtension, retrofitApiInterfaceBean, retrofitBuilderClazz, myInterceptors);
                 addExtensionInterceptors(interceptorExtension, retrofitApiInterfaceBean, clazz, myInterceptors);
             }
         }
         retrofitApiInterfaceBean.setMyInterceptors(myInterceptors);
-        retrofitApiInterfaceBean.setInterceptors(interceptors);
         RetrofitUrl retrofitUrl = getRetrofitUrl(retrofitBuilderBean);
         retrofitApiInterfaceBean.setRetrofitUrl(retrofitUrl);
         return retrofitApiInterfaceBean;
@@ -128,6 +127,7 @@ public class RetrofitApiInterfaceBeanGenerator implements Generator<RetrofitApiI
         if (retrofitBuilder == null) {
             Class<?>[] interfaces = clazz.getInterfaces();
             if (interfaces.length > 0) {
+                parentClazzSet.add(interfaces[0]);
                 targetClazz = findParentRetrofitBuilderClazz(interfaces[0], parentClazzSet);
             } else {
                 if (clazz.getDeclaredAnnotation(RetrofitBase.class) == null) {
@@ -135,7 +135,6 @@ public class RetrofitApiInterfaceBeanGenerator implements Generator<RetrofitApiI
                 }
             }
         }
-        parentClazzSet.add(targetClazz);
         return targetClazz;
     }
 
@@ -145,10 +144,10 @@ public class RetrofitApiInterfaceBeanGenerator implements Generator<RetrofitApiI
         if (retrofitBase != null) {
             final Class<?> baseApiClazz = retrofitBase.baseInterface();
             if (baseApiClazz != null) {
+                parentClazzSet.add(baseApiClazz);
                 targetClazz = findParentRetrofitBaseClazz(baseApiClazz, parentClazzSet);
             }
         }
-        parentClazzSet.add(targetClazz);
         return targetClazz;
     }
 
