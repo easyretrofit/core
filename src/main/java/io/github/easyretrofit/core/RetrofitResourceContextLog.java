@@ -1,6 +1,6 @@
 package io.github.easyretrofit.core;
 
-import io.github.easyretrofit.core.resource.RetrofitApiServiceBean;
+import io.github.easyretrofit.core.resource.RetrofitApiInterfaceBean;
 import io.github.easyretrofit.core.resource.RetrofitBuilderBean;
 import io.github.easyretrofit.core.resource.RetrofitClientBean;
 import io.github.easyretrofit.core.resource.UrlStatus;
@@ -29,7 +29,7 @@ public class RetrofitResourceContextLog {
                 log.info("---Retrofit Client : HostURL: {}, Retrofit instance name: {}", realHostUrl, retrofitInstanceName);
             }
             retrofitClientDebugLog(retrofitClient);
-            for (RetrofitApiServiceBean retrofitService : retrofitClient.getRetrofitApiServiceBeans()) {
+            for (RetrofitApiInterfaceBean retrofitService : retrofitClient.getRetrofitApiServiceBeans()) {
                 final Class<?> selfClazz = retrofitService.getSelfClazz();
                 final Class<?> parentClazz = retrofitService.getParentClazz();
                 String parentClazzName = null;

@@ -1,7 +1,7 @@
 package io.github.easyretrofit.core.extension;
 
 import io.github.easyretrofit.core.RetrofitResourceContext;
-import io.github.easyretrofit.core.resource.RetrofitApiServiceBean;
+import io.github.easyretrofit.core.resource.RetrofitApiInterfaceBean;
 import okhttp3.HttpUrl;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -52,7 +52,7 @@ public class UrlOverWriteInterceptor extends BaseInterceptor {
 
     private HttpUrl.Builder setNonSlashEndpoint(Request request, Method method) {
         String clazzName = super.getClazzNameByMethod(method);
-        final RetrofitApiServiceBean currentServiceBean = super.context.getRetrofitApiServiceBean(clazzName);
+        final RetrofitApiInterfaceBean currentServiceBean = super.context.getRetrofitApiServiceBean(clazzName);
         LinkedList<String> pathSegments = new LinkedList<>(request.url().pathSegments());
         String prefix;
         if (StringUtils.isNotEmpty(currentServiceBean.getRetrofitUrl().getDynamicUrl().getRealBaseUrl())) {

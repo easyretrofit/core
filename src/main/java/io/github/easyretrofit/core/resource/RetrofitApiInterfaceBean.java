@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
  *
  * @author liuziyuan
  */
-public final class RetrofitApiServiceBean implements UniqueKey {
+public final class RetrofitApiInterfaceBean implements UniqueKey {
 
     private Class<?> selfClazz;
     private Class<?> parentClazz;

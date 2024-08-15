@@ -2,7 +2,7 @@ package io.github.easyretrofit.core;
 
 
 
-import io.github.easyretrofit.core.resource.RetrofitApiServiceBean;
+import io.github.easyretrofit.core.resource.RetrofitApiInterfaceBean;
 import io.github.easyretrofit.core.resource.RetrofitClientBean;
 
 import java.util.List;
@@ -19,7 +19,7 @@ public class RetrofitResourceContext {
     private Class<?> retrofitBuilderExtensionClazz;
     private List<Class<?>> interceptorExtensionsClasses;
     private List<RetrofitClientBean> retrofitClients;
-    private Map<String, RetrofitApiServiceBean> retrofitApiServices;
+    private Map<String, RetrofitApiInterfaceBean> retrofitApiServices;
     private EnvManager envManager;
 
     public RetrofitResourceContext() {
@@ -28,7 +28,7 @@ public class RetrofitResourceContext {
 
     public RetrofitResourceContext(String[] basePackages,
                                    List<RetrofitClientBean> retrofitClients,
-                                   Map<String, RetrofitApiServiceBean> retrofitApiServices,
+                                   Map<String, RetrofitApiInterfaceBean> retrofitApiServices,
                                    Class<?> retrofitBuilderExtensionClazz,
                                    List<Class<?>> interceptorExtensionsClasses,
                                    EnvManager envManager) {
@@ -44,11 +44,11 @@ public class RetrofitResourceContext {
         return retrofitClients;
     }
 
-    public RetrofitApiServiceBean getRetrofitApiServiceBean(String clazzFullName) {
+    public RetrofitApiInterfaceBean getRetrofitApiServiceBean(String clazzFullName) {
         return retrofitApiServices.get(clazzFullName);
     }
 
-    public RetrofitApiServiceBean getRetrofitApiServiceBean(Class<?> clazz) {
+    public RetrofitApiInterfaceBean getRetrofitApiServiceBean(Class<?> clazz) {
         return retrofitApiServices.get(clazz.getName());
     }
 

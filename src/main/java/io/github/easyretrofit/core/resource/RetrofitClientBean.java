@@ -23,13 +23,13 @@ public final class RetrofitClientBean implements UniqueKey {
     private RetrofitBuilderBean retrofitBuilder;
     private final Set<RetrofitInterceptorBean> interceptors;
     //    private Set<RetrofitInterceptorBean> inheritedInterceptors;
-    private List<RetrofitApiServiceBean> retrofitApiServiceBeans;
+    private List<RetrofitApiInterfaceBean> retrofitApiInterfaceBeans;
 
 
-    public RetrofitClientBean(RetrofitApiServiceBean serviceBean) {
+    public RetrofitClientBean(RetrofitApiInterfaceBean serviceBean) {
         this.interceptors = new LinkedHashSet<>();
 //        this.inheritedInterceptors = new LinkedHashSet<>();
-        this.retrofitApiServiceBeans = new ArrayList<>();
+        this.retrofitApiInterfaceBeans = new ArrayList<>();
         this.setRetrofitBuilder(serviceBean.getRetrofitBuilder());
         this.setRealHostUrl(serviceBean.getRetrofitUrl().getDefaultUrl().getRealHostUrl());
         this.setUrlStatus(serviceBean.getRetrofitUrl().getUrlStatus());
@@ -38,9 +38,9 @@ public final class RetrofitClientBean implements UniqueKey {
         this.setRetrofitInstanceName();
     }
 
-    public void addRetrofitApiServiceBean(RetrofitApiServiceBean retrofitApiServiceBean) {
-        retrofitApiServiceBeans.add(retrofitApiServiceBean);
-        retrofitApiServiceBean.setRetrofitClientBean(this);
+    public void addRetrofitApiServiceBean(RetrofitApiInterfaceBean retrofitApiInterfaceBean) {
+        retrofitApiInterfaceBeans.add(retrofitApiInterfaceBean);
+        retrofitApiInterfaceBean.setRetrofitClientBean(this);
     }
 
     public void addInheritedInterceptors(Set<RetrofitInterceptorBean> serviceInheritedInterceptors) {
@@ -83,12 +83,12 @@ public final class RetrofitClientBean implements UniqueKey {
         this.interceptors.addAll(interceptors);
     }
 
-    public List<RetrofitApiServiceBean> getRetrofitApiServiceBeans() {
-        return retrofitApiServiceBeans;
+    public List<RetrofitApiInterfaceBean> getRetrofitApiServiceBeans() {
+        return retrofitApiInterfaceBeans;
     }
 
-    void setRetrofitApiServiceBeans(List<RetrofitApiServiceBean> retrofitApiServiceBeans) {
-        this.retrofitApiServiceBeans = retrofitApiServiceBeans;
+    void setRetrofitApiServiceBeans(List<RetrofitApiInterfaceBean> retrofitApiInterfaceBeans) {
+        this.retrofitApiInterfaceBeans = retrofitApiInterfaceBeans;
     }
 
     @Override

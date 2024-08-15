@@ -10,7 +10,9 @@ import retrofit2.Invocation;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * Abstract class of Interceptor, The inner interceptor needs to inherit it
@@ -20,6 +22,7 @@ import java.util.Objects;
 public abstract class BaseInterceptor implements Interceptor {
 
     protected RetrofitResourceContext context;
+    private Set<Class<?>> defaultScopeClasses;
     private String[] include;
     private String[] exclude;
     private final PathMatcher pathMatcher = new AntPathMatcher();

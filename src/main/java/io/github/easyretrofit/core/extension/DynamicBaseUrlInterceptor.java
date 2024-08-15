@@ -1,7 +1,7 @@
 package io.github.easyretrofit.core.extension;
 
 import io.github.easyretrofit.core.RetrofitResourceContext;
-import io.github.easyretrofit.core.resource.RetrofitApiServiceBean;
+import io.github.easyretrofit.core.resource.RetrofitApiInterfaceBean;
 import okhttp3.HttpUrl;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -24,7 +24,7 @@ public class DynamicBaseUrlInterceptor extends BaseInterceptor {
         Request request = chain.request();
         final Method method = super.getRequestMethod(request);
         String clazzName = super.getClazzNameByMethod(method);
-        final RetrofitApiServiceBean currentServiceBean = super.context.getRetrofitApiServiceBean(clazzName);
+        final RetrofitApiInterfaceBean currentServiceBean = super.context.getRetrofitApiServiceBean(clazzName);
         final String realDynamicHostUrl = currentServiceBean.getRetrofitUrl().getDynamicUrl().getRealHostUrl();
         if (StringUtils.isNotEmpty(realDynamicHostUrl)) {
             final HttpUrl httpUrl = HttpUrl.get(realDynamicHostUrl);

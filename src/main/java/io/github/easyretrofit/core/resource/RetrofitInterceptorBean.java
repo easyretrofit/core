@@ -8,9 +8,12 @@ import io.github.easyretrofit.core.util.UniqueKeyUtils;
 
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.Set;
 
 public final class RetrofitInterceptorBean implements UniqueKey {
     private final Class<? extends BaseInterceptor> handler;
+
+    private final Set<Class<?>> defaultScopeClasses;
 
     private InterceptorType type;
 
@@ -27,6 +30,7 @@ public final class RetrofitInterceptorBean implements UniqueKey {
         this.include = retrofitInterceptorParam.include();
         this.exclude = retrofitInterceptorParam.exclude();
         this.sort = retrofitInterceptorParam.sort();
+        defaultScopeClasses = Set.of();
     }
 
     public RetrofitInterceptorBean(RetrofitInterceptor retrofitInterceptor) {
@@ -35,6 +39,7 @@ public final class RetrofitInterceptorBean implements UniqueKey {
         this.include = retrofitInterceptor.include();
         this.exclude = retrofitInterceptor.exclude();
         this.sort = retrofitInterceptor.sort();
+        defaultScopeClasses = Set.of();
     }
 
     @Override

@@ -11,9 +11,9 @@ import java.util.List;
  */
 public class RetrofitClientBeanGenerator implements Generator<RetrofitClientBean> {
     private final List<RetrofitClientBean> clientBeanList;
-    private final RetrofitApiServiceBean serviceBean;
+    private final RetrofitApiInterfaceBean serviceBean;
 
-    public RetrofitClientBeanGenerator(List<RetrofitClientBean> clientBeanList, RetrofitApiServiceBean serviceBean) {
+    public RetrofitClientBeanGenerator(List<RetrofitClientBean> clientBeanList, RetrofitApiInterfaceBean serviceBean) {
         this.clientBeanList = clientBeanList;
         this.serviceBean = serviceBean;
     }
@@ -28,7 +28,7 @@ public class RetrofitClientBeanGenerator implements Generator<RetrofitClientBean
         return clientBean;
     }
 
-    private RetrofitClientBean findExistRetrofitClientBean(RetrofitApiServiceBean serviceBean, List<RetrofitClientBean> clientBeanList) {
+    private RetrofitClientBean findExistRetrofitClientBean(RetrofitApiInterfaceBean serviceBean, List<RetrofitClientBean> clientBeanList) {
         for (RetrofitClientBean clientBean : clientBeanList) {
             RetrofitResourceComparer comparer = new RetrofitResourceComparer(clientBean, serviceBean);
             if (comparer.isSameHostUrl() &&
