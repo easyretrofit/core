@@ -3,7 +3,6 @@ package io.github.easyretrofit.core.resource;
 import io.github.easyretrofit.core.Generator;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * generate RetrofitClientBean object

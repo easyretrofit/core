@@ -5,12 +5,9 @@ import io.github.easyretrofit.core.annotation.RetrofitInterceptor;
 import io.github.easyretrofit.core.annotation.RetrofitInterceptorParam;
 import io.github.easyretrofit.core.extension.BaseInterceptor;
 import io.github.easyretrofit.core.util.UniqueKeyUtils;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 public final class RetrofitInterceptorBean implements UniqueKey {

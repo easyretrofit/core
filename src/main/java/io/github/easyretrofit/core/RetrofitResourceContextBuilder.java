@@ -1,6 +1,9 @@
 package io.github.easyretrofit.core;
 
-import io.github.easyretrofit.core.resource.*;
+import io.github.easyretrofit.core.resource.RetrofitApiInterfaceBean;
+import io.github.easyretrofit.core.resource.RetrofitApiInterfaceBeanGenerator;
+import io.github.easyretrofit.core.resource.RetrofitClientBean;
+import io.github.easyretrofit.core.resource.RetrofitClientBeanGenerator;
 
 import java.util.*;
 
