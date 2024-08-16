@@ -12,18 +12,18 @@ public class RetrofitResourceApiInterfaceClassBean {
 
     private Class<?> ancestor;
 
-    private Set<Class<?>> self2Ancestors;
+    private LinkedHashSet<Class<?>> self2Ancestors;
 
-    private List<Class<?>> children;
+    private Set<Class<?>> children;
 
     public RetrofitResourceApiInterfaceClassBean(Class<?> myself) {
         this.myself = myself;
         this.self2Ancestors = new LinkedHashSet<>();
-        this.children = new ArrayList<>();
+        this.children = new LinkedHashSet<>();
         fillParentsBean(myself);
     }
 
-    public Set<Class<?>> getSelf2Ancestors() {
+    public LinkedHashSet<Class<?>> getSelf2Ancestors() {
         return self2Ancestors;
     }
 
@@ -35,19 +35,19 @@ public class RetrofitResourceApiInterfaceClassBean {
         return myself;
     }
 
-    public List<Class<?>> getChildren() {
+    public Set<Class<?>> getChildren() {
         return children;
     }
 
-    public void setChildren(List<Class<?>> children) {
+    public void setChildren(Set<Class<?>> children) {
         this.children = children;
     }
 
 
     private void fillParentsBean(Class<?> clazz) {
-        Set<Class<?>> parentClazzSet = new LinkedHashSet<>();
+        LinkedHashSet<Class<?>> parentClazzSet = new LinkedHashSet<>();
         this.ancestor = findParentClazzIncludeRetrofitBuilderAndBase(clazz, parentClazzSet);
-        this.self2Ancestors = parentClazzSet;
+        this.self2Ancestors =  parentClazzSet;
     }
 
 

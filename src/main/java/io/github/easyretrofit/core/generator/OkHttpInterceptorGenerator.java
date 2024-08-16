@@ -52,6 +52,7 @@ public abstract class OkHttpInterceptorGenerator implements Generator<Intercepto
         if (interceptor != null) {
             interceptor.setInclude(retrofitInterceptor.getInclude());
             interceptor.setExclude(retrofitInterceptor.getExclude());
+            interceptor.setDefaultScopeClasses(retrofitInterceptor.getDefaultScopeClasses());
         }
         return interceptor;
 

@@ -19,19 +19,16 @@ public final class RetrofitClientBean implements UniqueKey {
     private UrlStatus urlStatus;
     private RetrofitBuilderBean retrofitBuilder;
     private Set<RetrofitInterceptorBean> interceptors;
-    //    private Set<RetrofitInterceptorBean> inheritedInterceptors;
     private List<RetrofitApiInterfaceBean> retrofitApiInterfaceBeans;
 
 
     public RetrofitClientBean(RetrofitApiInterfaceBean serviceBean, List<RetrofitApiInterfaceBean> retrofitApiInterfaceBeanList) {
-//        this.inheritedInterceptors = new LinkedHashSet<>();
         this.setRetrofitApiInterfaceBeans(serviceBean, retrofitApiInterfaceBeanList);
         this.setRetrofitBuilder(serviceBean.getRetrofitBuilder());
         this.setRealHostUrl(serviceBean.getRetrofitUrl().getDefaultUrl().getRealHostUrl());
         this.setUrlStatus(serviceBean.getRetrofitUrl().getUrlStatus());
-        this.setInterceptors(serviceBean, retrofitApiInterfaceBeanList);
+        this.setInterceptors(serviceBean);
         this.setRetrofitInstanceName();
-
     }
 
     private void setRetrofitApiInterfaceBeans(RetrofitApiInterfaceBean serviceBean, List<RetrofitApiInterfaceBean> retrofitApiInterfaceBeanList) {
@@ -43,25 +40,13 @@ public final class RetrofitClientBean implements UniqueKey {
         }
     }
 
-    private void setInterceptors(RetrofitApiInterfaceBean serviceBean, List<RetrofitApiInterfaceBean> retrofitApiInterfaceBeanList) {
+    private void setInterceptors(RetrofitApiInterfaceBean serviceBean) {
         interceptors = new HashSet<>();
         if (serviceBean.getMyInterceptors() != null) {
             interceptors.addAll(serviceBean.getMyInterceptors());
         }
-        for (RetrofitApiInterfaceBean retrofitApiInterfaceBean : retrofitApiInterfaceBeans) {
-            if (retrofitApiInterfaceBean.getMyInterceptors() != null) {
-                Set<RetrofitInterceptorBean> childrenInterceptors = retrofitApiInterfaceBean.getMyInterceptors();
-                for (RetrofitInterceptorBean childrenInterceptor : childrenInterceptors) {
-                    childrenInterceptor.setDefaultScopeClasses(retrofitApiInterfaceBean.getChildrenClasses().stream().map(Class::getName).collect(Collectors.toSet()));
-                }
-                interceptors.addAll(childrenInterceptors);
-            }
-        }
     }
 
-    public void addInheritedInterceptors(Set<RetrofitInterceptorBean> serviceInheritedInterceptors) {
-        this.interceptors.addAll(serviceInheritedInterceptors);
-    }
 
     public String getRetrofitInstanceName() {
         return retrofitInstanceName;

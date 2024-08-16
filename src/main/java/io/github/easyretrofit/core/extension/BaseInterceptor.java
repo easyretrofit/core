@@ -10,9 +10,7 @@ import retrofit2.Invocation;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 /**
  * Abstract class of Interceptor, The inner interceptor needs to inherit it
@@ -22,7 +20,7 @@ import java.util.Set;
 public abstract class BaseInterceptor implements Interceptor {
 
     protected RetrofitResourceContext context;
-    private Set<Class<?>> defaultScopeClasses;
+    private Class<?>[] defaultScopeClasses;
     private String[] include;
     private String[] exclude;
     private final PathMatcher pathMatcher = new AntPathMatcher();
@@ -39,10 +37,12 @@ public abstract class BaseInterceptor implements Interceptor {
     public final Response intercept(Chain chain) throws IOException {
         Request request = chain.request();
         String path = request.url().encodedPath();
-        if (isMatch(exclude, path)) {
+        Method method = this.getRequestMethod(request);
+        String clazzName = this.getClazzNameByMethod(method);
+        if (!functionInDefaultScope(clazzName) && isMatch(exclude, path)) {
             return chain.proceed(request);
         }
-        if (include != null && !isMatch(include, path)) {
+        if (!functionInDefaultScope(clazzName) && include != null && !isMatch(include, path)) {
             return chain.proceed(request);
         }
         return executeIntercept(chain);
@@ -55,6 +55,18 @@ public abstract class BaseInterceptor implements Interceptor {
      * @return Response
      */
     protected abstract Response executeIntercept(Chain chain) throws IOException;
+
+    private boolean functionInDefaultScope(String className) {
+        if (defaultScopeClasses == null) {
+            return true;
+        }
+        for (Class<?> defaultScopeClass : defaultScopeClasses) {
+            if (defaultScopeClass.getName().equals(className)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     private boolean isMatch(String[] patterns, String path) {
         if (patterns == null) {
@@ -78,6 +90,9 @@ public abstract class BaseInterceptor implements Interceptor {
         this.exclude = exclude;
     }
 
+    public void setDefaultScopeClasses(Class<?>[] defaultScopeClasses) {
+        this.defaultScopeClasses = defaultScopeClasses;
+    }
 
     protected String getClazzNameByMethod(Method method) {
         return method.getDeclaringClass().getName();

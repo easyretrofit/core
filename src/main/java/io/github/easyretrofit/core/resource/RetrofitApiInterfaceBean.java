@@ -20,7 +20,7 @@ public final class RetrofitApiInterfaceBean implements UniqueKey {
     private Class<?> selfClazz;
     private Class<?> parentClazz;
     private LinkedHashSet<Class<?>> self2ParentClasses;
-    private LinkedHashSet<Class<?>> childrenClasses;
+    private Set<Class<?>> childrenClasses;
     private RetrofitUrl retrofitUrl;
     private RetrofitBuilderBean retrofitBuilder;
     /**
@@ -106,11 +106,11 @@ public final class RetrofitApiInterfaceBean implements UniqueKey {
         this.self2ParentClasses = self2ParentClasses;
     }
 
-    public LinkedHashSet<Class<?>> getChildrenClasses() {
+    public Set<Class<?>> getChildrenClasses() {
         return childrenClasses;
     }
 
-    public void setChildrenClasses(LinkedHashSet<Class<?>> childrenClasses) {
+    public void setChildrenClasses(Set<Class<?>> childrenClasses) {
         this.childrenClasses = childrenClasses;
     }
     //    public Set<RetrofitInterceptorBean> getInterceptors() {

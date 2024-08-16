@@ -7,13 +7,12 @@ import io.github.easyretrofit.core.extension.BaseInterceptor;
 import io.github.easyretrofit.core.util.UniqueKeyUtils;
 
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Set;
 
 public final class RetrofitInterceptorBean implements UniqueKey {
     private final Class<? extends BaseInterceptor> handler;
 
-    private Set<String> defaultScopeClasses;
+    private final Class<?>[] defaultScopeClasses;
 
     private InterceptorType type;
 
@@ -24,8 +23,8 @@ public final class RetrofitInterceptorBean implements UniqueKey {
     private final int sort;
 
 
-    public RetrofitInterceptorBean(RetrofitInterceptor retrofitInterceptor, RetrofitInterceptorParam retrofitInterceptorParam) {
-        this.defaultScopeClasses = new HashSet<>();
+    public RetrofitInterceptorBean(RetrofitInterceptor retrofitInterceptor, RetrofitInterceptorParam retrofitInterceptorParam, Set<Class<?>> defaultScopeClasses) {
+        this.defaultScopeClasses = defaultScopeClasses.toArray(new Class[0]);
         this.handler = retrofitInterceptor.handler();
         this.type = retrofitInterceptorParam.type();
         this.include = retrofitInterceptorParam.include();
@@ -33,8 +32,8 @@ public final class RetrofitInterceptorBean implements UniqueKey {
         this.sort = retrofitInterceptorParam.sort();
     }
 
-    public RetrofitInterceptorBean(RetrofitInterceptor retrofitInterceptor) {
-        this.defaultScopeClasses = new HashSet<>();
+    public RetrofitInterceptorBean(RetrofitInterceptor retrofitInterceptor, Set<Class<?>> defaultScopeClasses) {
+        this.defaultScopeClasses = defaultScopeClasses.toArray(new Class[0]);
         this.handler = retrofitInterceptor.handler();
         this.type = retrofitInterceptor.type();
         this.include = retrofitInterceptor.include();
@@ -82,12 +81,8 @@ public final class RetrofitInterceptorBean implements UniqueKey {
         return exclude;
     }
 
-    public Set<String> getDefaultScopeClasses() {
+    public Class<?>[] getDefaultScopeClasses() {
         return defaultScopeClasses;
-    }
-
-    public void setDefaultScopeClasses(Set<String> defaultScopeClasses) {
-        this.defaultScopeClasses = defaultScopeClasses;
     }
 
     public int getSort() {
@@ -99,7 +94,7 @@ public final class RetrofitInterceptorBean implements UniqueKey {
         return "RetrofitInterceptorBean{" +
                 "handler=" + handler +
                 ", type=" + type +
-                ", defaultScopeClasses=" + Arrays.toString(defaultScopeClasses.toArray()) +
+                ", defaultScopeClasses=" + Arrays.toString(defaultScopeClasses) +
                 ", include=" + Arrays.toString(include) +
                 ", exclude=" + Arrays.toString(exclude) +
                 ", sort=" + sort +

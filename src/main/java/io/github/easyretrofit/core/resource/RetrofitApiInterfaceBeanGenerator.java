@@ -5,7 +5,7 @@ import io.github.easyretrofit.core.Generator;
 import io.github.easyretrofit.core.RetrofitBuilderExtension;
 import io.github.easyretrofit.core.RetrofitInterceptorExtension;
 import io.github.easyretrofit.core.annotation.*;
-import io.github.easyretrofit.core.exception.RetrofitBaseException;
+import io.github.easyretrofit.core.resource.pre.RetrofitResourceApiInterfaceClassBean;
 import io.github.easyretrofit.core.util.ReflectUtils;
 
 import java.lang.annotation.Annotation;
@@ -19,16 +19,18 @@ import java.util.*;
  * @author liuziyuan
  */
 public class RetrofitApiInterfaceBeanGenerator implements Generator<RetrofitApiInterfaceBean> {
+    RetrofitResourceApiInterfaceClassBean bean;
     private final Class<?> clazz;
     private final EnvManager env;
     private final RetrofitBuilderExtension globalRetrofitBuilderExtension;
     private final List<RetrofitInterceptorExtension> interceptorExtensions;
 
-    public RetrofitApiInterfaceBeanGenerator(Class<?> clazz,
+    public RetrofitApiInterfaceBeanGenerator(RetrofitResourceApiInterfaceClassBean bean,
                                              EnvManager env,
                                              RetrofitBuilderExtension globalRetrofitBuilderExtension,
                                              List<RetrofitInterceptorExtension> interceptorExtensions) {
-        this.clazz = clazz;
+        this.bean = bean;
+        this.clazz = bean.getMyself();
         this.env = env;
         this.globalRetrofitBuilderExtension = globalRetrofitBuilderExtension;
         this.interceptorExtensions = interceptorExtensions;
@@ -36,17 +38,16 @@ public class RetrofitApiInterfaceBeanGenerator implements Generator<RetrofitApiI
 
     @Override
     public RetrofitApiInterfaceBean generate() {
-        LinkedHashSet<Class<?>> parentClazzSet = new LinkedHashSet<>();
-        Class<?> retrofitBuilderClazz = getParentRetrofitBuilderClazz(parentClazzSet);
         // create RetrofitApiInterfaceBean
         RetrofitApiInterfaceBean retrofitApiInterfaceBean = new RetrofitApiInterfaceBean();
-        retrofitApiInterfaceBean.setSelfClazz(clazz);
-        retrofitApiInterfaceBean.setParentClazz(retrofitBuilderClazz);
-        retrofitApiInterfaceBean.setSelf2ParentClasses(parentClazzSet);
+        retrofitApiInterfaceBean.setSelfClazz(bean.getMyself());
+        retrofitApiInterfaceBean.setParentClazz(bean.getAncestor());
+        retrofitApiInterfaceBean.setSelf2ParentClasses(bean.getSelf2Ancestors());
+        retrofitApiInterfaceBean.setChildrenClasses(bean.getChildren());
         //将RetrofitBuilder注解信息注入到RetrofitBuilderBean中
-        RetrofitBuilderBean retrofitBuilderBean = new RetrofitBuilderBean(retrofitBuilderClazz, globalRetrofitBuilderExtension);
+        RetrofitBuilderBean retrofitBuilderBean = new RetrofitBuilderBean(bean.getAncestor(), globalRetrofitBuilderExtension);
         retrofitApiInterfaceBean.setRetrofitBuilder(retrofitBuilderBean);
-        Set<RetrofitInterceptorBean> myInterceptors = getInterceptors(clazz);
+        Set<RetrofitInterceptorBean> myInterceptors = getInterceptors(bean);
         if (interceptorExtensions != null) {
             for (RetrofitInterceptorExtension interceptorExtension : interceptorExtensions) {
                 addExtensionInterceptors(interceptorExtension, retrofitApiInterfaceBean, clazz, myInterceptors);
@@ -64,7 +65,7 @@ public class RetrofitApiInterfaceBeanGenerator implements Generator<RetrofitApiI
             if (extensionAnnotation != null) {
                 RetrofitInterceptor interceptorAnnotation = extensionAnnotation.annotationType().getAnnotation(RetrofitInterceptor.class);
                 if (interceptorAnnotation != null) {
-                    RetrofitInterceptorBean retrofitInterceptorBean = new RetrofitInterceptorBean(interceptorAnnotation);
+                    RetrofitInterceptorBean retrofitInterceptorBean = new RetrofitInterceptorBean(interceptorAnnotation, bean.getChildren());
                     retrofitInterceptorBean = getInterceptorParamsAnnotation(interceptorExtension, apiClazz, interceptorAnnotation, retrofitInterceptorBean);
                     assert Objects.requireNonNull(retrofitInterceptorBean).getHandler() == interceptorExtension.createInterceptor();
                     if (interceptorExtension.createExceptionDelegate() != null) {
@@ -86,7 +87,7 @@ public class RetrofitApiInterfaceBeanGenerator implements Generator<RetrofitApiI
                 String paramsName = method.getName();
                 RetrofitInterceptorParam extensionObj = (RetrofitInterceptorParam) ReflectUtils.getMethodReturnValue(declaredAnnotation, paramsName);
                 assert extensionObj != null;
-                return new RetrofitInterceptorBean(interceptorAnnotation, extensionObj);
+                return new RetrofitInterceptorBean(interceptorAnnotation, extensionObj, bean.getChildren());
             }
         }
         return retrofitInterceptorBean;
@@ -103,65 +104,18 @@ public class RetrofitApiInterfaceBeanGenerator implements Generator<RetrofitApiI
                 env);
     }
 
-    private Class<?> getParentRetrofitBuilderClazz(Set<Class<?>> parentClazzSet) {
-        return findParentClazzIncludeRetrofitBuilderAndBase(clazz, parentClazzSet);
-    }
 
-    private Class<?> findParentClazzIncludeRetrofitBuilderAndBase(Class<?> clazz, Set<Class<?>> parentClazzSet) {
-
-        Class<?> retrofitBuilderClazz;
-        if (clazz.getDeclaredAnnotation(RetrofitBase.class) != null) {
-            retrofitBuilderClazz = findParentRetrofitBaseClazz(clazz, parentClazzSet);
-        } else {
-            retrofitBuilderClazz = findParentRetrofitBuilderClazz(clazz, parentClazzSet);
-        }
-        if (retrofitBuilderClazz.getDeclaredAnnotation(RetrofitBuilder.class) == null) {
-            retrofitBuilderClazz = findParentClazzIncludeRetrofitBuilderAndBase(retrofitBuilderClazz, parentClazzSet);
-        }
-        return retrofitBuilderClazz;
-    }
-
-    private Class<?> findParentRetrofitBuilderClazz(Class<?> clazz, Set<Class<?>> parentClazzSet) {
-        RetrofitBuilder retrofitBuilder = clazz.getDeclaredAnnotation(RetrofitBuilder.class);
-        Class<?> targetClazz = clazz;
-        if (retrofitBuilder == null) {
-            Class<?>[] interfaces = clazz.getInterfaces();
-            if (interfaces.length > 0) {
-                parentClazzSet.add(interfaces[0]);
-                targetClazz = findParentRetrofitBuilderClazz(interfaces[0], parentClazzSet);
-            } else {
-                if (clazz.getDeclaredAnnotation(RetrofitBase.class) == null) {
-                    throw new RetrofitBaseException("The baseApi of @RetrofitBase in the [" + clazz.getSimpleName() + "] Interface, does not define @RetrofitBuilder");
-                }
-            }
-        }
-        return targetClazz;
-    }
-
-    private Class<?> findParentRetrofitBaseClazz(Class<?> clazz, Set<Class<?>> parentClazzSet) {
-        RetrofitBase retrofitBase = clazz.getDeclaredAnnotation(RetrofitBase.class);
-        Class<?> targetClazz = clazz;
-        if (retrofitBase != null) {
-            final Class<?> baseApiClazz = retrofitBase.baseInterface();
-            if (baseApiClazz != null) {
-                parentClazzSet.add(baseApiClazz);
-                targetClazz = findParentRetrofitBaseClazz(baseApiClazz, parentClazzSet);
-            }
-        }
-        return targetClazz;
-    }
-
-    private Set<RetrofitInterceptorBean> getInterceptors(Class<?> clazz) {
+    private Set<RetrofitInterceptorBean> getInterceptors(RetrofitResourceApiInterfaceClassBean bean) {
         Annotation[] annotations = clazz.getDeclaredAnnotations();
         Set<RetrofitInterceptorBean> retrofitInterceptorAnnotations = new LinkedHashSet<>();
         for (Annotation annotation : annotations) {
             if (annotation instanceof Interceptors) {
                 RetrofitInterceptor[] values = ((Interceptors) annotation).value();
                 for (RetrofitInterceptor retrofitInterceptor : values) {
-                    retrofitInterceptorAnnotations.add(new RetrofitInterceptorBean(retrofitInterceptor));
+                    retrofitInterceptorAnnotations.add(new RetrofitInterceptorBean(retrofitInterceptor, bean.getChildren()));
                 }
             } else if (annotation instanceof RetrofitInterceptor) {
-                retrofitInterceptorAnnotations.add(new RetrofitInterceptorBean((RetrofitInterceptor) annotation));
+                retrofitInterceptorAnnotations.add(new RetrofitInterceptorBean((RetrofitInterceptor) annotation, bean.getChildren()));
             }
         }
         return retrofitInterceptorAnnotations;
