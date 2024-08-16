@@ -1,7 +1,6 @@
 package io.github.easyretrofit.core.resource.pre;
 
 import io.github.easyretrofit.core.resource.data.*;
-import io.github.easyretrofit.core.resource.pre.data.*;
 import org.junit.Before;
 import org.junit.Test;
 
