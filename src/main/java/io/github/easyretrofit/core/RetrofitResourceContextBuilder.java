@@ -37,11 +37,17 @@ public class RetrofitResourceContextBuilder {
                                                         List<RetrofitInterceptorExtension> interceptorExtensions,
                                                         EnvManager envManager) {
         RetrofitResourceClassBean resourceClassBean = preRetrofitResourceClassHandle(retrofitBuilderClassSet);
+        // step1 generate list of api interface bean
         setRetrofitApiInterfaceBeanList(resourceClassBean, globalRetrofitBuilderExtension, interceptorExtensions, envManager);
+        // step2 generate list of client bean
         setRetrofitClientBeanList(resourceClassBean);
+        // step3 set map of api interface bean
         setRetrofitApiInterfaceBeanHashMap();
+        // step4 set retrofit builder extension clazz
         setRetrofitBuilderExtensionClazz(globalRetrofitBuilderExtension);
+        // step5 set interceptor extensions classes
         setInterceptorExtensionsClasses(interceptorExtensions);
+        // step6 return context
         return new RetrofitResourceContext(basePackages,
                 retrofitClientBeanList, retrofitServiceBeanHashMap, retrofitBuilderExtensionClazz, interceptorExtensionsClasses, envManager);
     }
