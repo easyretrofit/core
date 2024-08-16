@@ -1,15 +1,12 @@
 package io.github.easyretrofit.core;
 
-import io.github.easyretrofit.core.resource.RetrofitApiInterfaceBean;
-import io.github.easyretrofit.core.resource.RetrofitApiInterfaceBeanGenerator;
-import io.github.easyretrofit.core.resource.RetrofitClientBean;
-import io.github.easyretrofit.core.resource.RetrofitClientBeanGenerator;
+import io.github.easyretrofit.core.resource.*;
 import io.github.easyretrofit.core.resource.pre.RetrofitResourceApiInterfaceClassBean;
 import io.github.easyretrofit.core.resource.pre.RetrofitResourceClassBean;
 import io.github.easyretrofit.core.resource.pre.RetrofitResourceClientClassBean;
+import org.apache.commons.lang3.ObjectUtils;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * the builder of Retrofit resource context, used to assemble all the retrofit resource
@@ -86,13 +83,50 @@ public class RetrofitResourceContextBuilder {
     }
 
     private void setRetrofitClientBeanList(RetrofitResourceClassBean resourceClassBean) {
+        // generate client beans
+        generateClientBeans(resourceClassBean);
+        // compare and merge client beans
+        compareAndMergeClientBeans();
+        // set client bean UniqueKey to api interface beans
+        setUniqueKey4ApiInterfaceBeans();
+    }
 
+    private void setUniqueKey4ApiInterfaceBeans() {
+        for (RetrofitClientBean clientBean : retrofitClientBeanList) {
+            for (RetrofitApiInterfaceBean apiInterfaceBean : clientBean.getRetrofitApiInterfaceBeans()) {
+                apiInterfaceBean.setRetrofitClientBean(clientBean);
+            }
+        }
+    }
+
+    private void compareAndMergeClientBeans() {
+        List<Integer> removeIndex = new ArrayList<>();
+        for (int i = 0; i < retrofitClientBeanList.size(); i++) {
+            for (int j = 0; j < retrofitClientBeanList.size(); j++) {
+                if (i == j) { //sourceBean is not compareBean
+                    continue;
+                }
+                RetrofitClientBean clientBean = retrofitClientBeanList.get(i);
+                RetrofitClientBean compareClientBean = retrofitClientBeanList.get(j);
+                RetrofitClientComparer comparer = new RetrofitClientComparer(clientBean, compareClientBean);
+                if (comparer.isSameRetrofitBuilderInstance()) {
+                    removeIndex.add(j);
+                    retrofitClientBeanList.get(i).getRetrofitApiInterfaceBeans().addAll(compareClientBean.getRetrofitApiInterfaceBeans());
+                }
+            }
+        }
+        for (Integer index : removeIndex) {
+            retrofitClientBeanList.remove(index);
+        }
+    }
+
+    private void generateClientBeans(RetrofitResourceClassBean resourceClassBean) {
         for (RetrofitResourceClientClassBean clientClassBean : resourceClassBean.getClientClassBeans()) {
             List<RetrofitApiInterfaceBean> belongsApiInterfaceBeans = new ArrayList<>();
             // find belongs api interface beans
             for (RetrofitApiInterfaceBean bean : retrofitApiInterfaceBeanList) {
                 for (RetrofitResourceApiInterfaceClassBean classBean : clientClassBean.getApiInterfaceClassBeans()) {
-                    if (classBean.getMyself().equals(bean.getSelfClazz())){
+                    if (classBean.getMyself().equals(bean.getSelfClazz())) {
                         belongsApiInterfaceBeans.add(bean);
                     }
                 }
@@ -101,7 +135,6 @@ public class RetrofitResourceContextBuilder {
             retrofitClientBeanList.add(clientBeanGenerator.generate());
         }
     }
-
 
     private void setInterceptorExtensionsClasses(List<RetrofitInterceptorExtension> interceptorExtensions) {
         if (interceptorExtensions != null) {

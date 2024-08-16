@@ -23,10 +23,6 @@ public final class RetrofitApiInterfaceBean implements UniqueKey {
     private Set<Class<?>> childrenClasses;
     private RetrofitUrl retrofitUrl;
     private RetrofitBuilderBean retrofitBuilder;
-    /**
-     * parent Interface interceptors
-     */
-//    private Set<RetrofitInterceptorBean> interceptors;
     private Set<RetrofitInterceptorBean> myInterceptors;
     private String retrofitClientBeanInstanceName;
     private Set<Class<? extends BaseExceptionDelegate<? extends RetrofitExtensionException>>> exceptionDelegates;
@@ -38,7 +34,6 @@ public final class RetrofitApiInterfaceBean implements UniqueKey {
     public void setRetrofitClientBean(RetrofitClientBean retrofitClientBean) {
         this.retrofitClientBeanInstanceName = retrofitClientBean.getRetrofitInstanceName();
         this.retrofitBuilder = retrofitClientBean.getRetrofitBuilder();
-//        this.interceptors = retrofitClientBean.getInterceptors();
     }
 
     public void addExceptionDelegate(Class<? extends BaseExceptionDelegate<? extends RetrofitExtensionException>> clazz) {
