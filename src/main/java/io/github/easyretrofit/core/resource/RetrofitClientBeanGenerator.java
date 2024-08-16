@@ -10,14 +10,6 @@ import java.util.List;
  * @author liuziyuan
  */
 public class RetrofitClientBeanGenerator implements Generator<RetrofitClientBean> {
-//    private final List<RetrofitClientBean> clientBeanList;
-//    private final RetrofitApiInterfaceBean serviceBean;
-
-//    public RetrofitClientBeanGenerator(List<RetrofitClientBean> clientBeanList, RetrofitApiInterfaceBean serviceBean) {
-//        this.clientBeanList = clientBeanList;
-//        this.serviceBean = serviceBean;
-//    }
-
     private final List<RetrofitApiInterfaceBean> retrofitApiInterfaceBeanList;
     private final Class<?> clientBeanClass;
 

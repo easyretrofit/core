@@ -27,7 +27,7 @@ public final class RetrofitClientBean implements UniqueKey {
         this.setRetrofitBuilder(serviceBean.getRetrofitBuilder());
         this.setRealHostUrl(serviceBean.getRetrofitUrl().getDefaultUrl().getRealHostUrl());
         this.setUrlStatus(serviceBean.getRetrofitUrl().getUrlStatus());
-        this.setInterceptors(serviceBean);
+        this.setInterceptors(retrofitApiInterfaceBeanList);
         this.setRetrofitInstanceName();
     }
 
@@ -40,10 +40,12 @@ public final class RetrofitClientBean implements UniqueKey {
         }
     }
 
-    private void setInterceptors(RetrofitApiInterfaceBean serviceBean) {
+    private void setInterceptors(List<RetrofitApiInterfaceBean> apiInterfaceBeans) {
         interceptors = new HashSet<>();
-        if (serviceBean.getMyInterceptors() != null) {
-            interceptors.addAll(serviceBean.getMyInterceptors());
+        for (RetrofitApiInterfaceBean apiInterfaceBean : apiInterfaceBeans) {
+            if (apiInterfaceBean.getMyInterceptors() != null) {
+                interceptors.addAll(apiInterfaceBean.getMyInterceptors());
+            }
         }
     }
 

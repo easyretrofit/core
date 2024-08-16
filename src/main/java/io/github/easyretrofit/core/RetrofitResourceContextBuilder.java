@@ -9,6 +9,7 @@ import io.github.easyretrofit.core.resource.pre.RetrofitResourceClassBean;
 import io.github.easyretrofit.core.resource.pre.RetrofitResourceClientClassBean;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * the builder of Retrofit resource context, used to assemble all the retrofit resource
@@ -38,23 +39,16 @@ public class RetrofitResourceContextBuilder {
                                                         List<RetrofitInterceptorExtension> interceptorExtensions,
                                                         EnvManager envManager) {
         RetrofitResourceClassBean resourceClassBean = preRetrofitResourceClassHandle(retrofitBuilderClassSet);
-        retrofitResourceHandle(resourceClassBean, globalRetrofitBuilderExtension, interceptorExtensions, envManager);
-//        setRetrofitApiInterfaceBeanList(retrofitBuilderClassSet, globalRetrofitBuilderExtension, interceptorExtensions);
-//        setRetrofitApiInterfaceBeanChildrenClass();
-        setRetrofitClientBeanList();
+        setRetrofitApiInterfaceBeanList(resourceClassBean, globalRetrofitBuilderExtension, interceptorExtensions, envManager);
+        setRetrofitClientBeanList(resourceClassBean);
         setRetrofitApiInterfaceBeanHashMap();
-
         setRetrofitBuilderExtensionClazz(globalRetrofitBuilderExtension);
         setInterceptorExtensionsClasses(interceptorExtensions);
         return new RetrofitResourceContext(basePackages,
                 retrofitClientBeanList, retrofitServiceBeanHashMap, retrofitBuilderExtensionClazz, interceptorExtensionsClasses, envManager);
     }
 
-    private void retrofitResourceHandle(RetrofitResourceClassBean resourceClassBean, RetrofitBuilderExtension globalRetrofitBuilderExtension, List<RetrofitInterceptorExtension> interceptorExtensions, EnvManager envManager) {
-        fillRetrofitApiInterfaceBean(resourceClassBean, globalRetrofitBuilderExtension, interceptorExtensions, envManager);
-    }
-
-    private void fillRetrofitApiInterfaceBean(RetrofitResourceClassBean resourceClassBean, RetrofitBuilderExtension globalRetrofitBuilderExtension, List<RetrofitInterceptorExtension> interceptorExtensions, EnvManager envManager) {
+    private void setRetrofitApiInterfaceBeanList(RetrofitResourceClassBean resourceClassBean, RetrofitBuilderExtension globalRetrofitBuilderExtension, List<RetrofitInterceptorExtension> interceptorExtensions, EnvManager envManager) {
         for (RetrofitResourceApiInterfaceClassBean apiInterfaceClassBean : resourceClassBean.getApiInterfaceClassBeans()) {
             RetrofitApiInterfaceBean apiInterfaceBean = new RetrofitApiInterfaceBeanGenerator(apiInterfaceClassBean, envManager, globalRetrofitBuilderExtension, interceptorExtensions).generate();
             if (apiInterfaceBean != null) {
@@ -88,50 +82,21 @@ public class RetrofitResourceContextBuilder {
         }
     }
 
-//    private void setRetrofitApiInterfaceBeanList(Set<Class<?>> retrofitBuilderClassSet,
-//                                                 RetrofitBuilderExtension globalRetrofitBuilderExtension,
-//                                                 List<RetrofitInterceptorExtension> interceptorExtensions) {
-//        RetrofitApiInterfaceBeanGenerator serviceBeanHandler;
-//        for (Class<?> clazz : retrofitBuilderClassSet) {
-//            serviceBeanHandler = new RetrofitApiInterfaceBeanGenerator(clazz, envManager, globalRetrofitBuilderExtension, interceptorExtensions);
-//            final RetrofitApiInterfaceBean serviceBean = serviceBeanHandler.generate();
-//            if (serviceBean != null) {
-//                retrofitApiInterfaceBeanList.add(serviceBean);
-//            }
-//        }
-//    }
+    private void setRetrofitClientBeanList(RetrofitResourceClassBean resourceClassBean) {
 
-//    private void setRetrofitApiInterfaceBeanChildrenClass() {
-//        for (RetrofitApiInterfaceBean serviceBean : retrofitApiInterfaceBeanList) {
-//            final Class<?> selfClazz = serviceBean.getSelfClazz();
-//            final Class<?> parentClazz = serviceBean.getParentClazz();
-//            if (parentClazz != null) {
-//                for (RetrofitApiInterfaceBean apiInterfaceBean : retrofitApiInterfaceBeanList) {
-//                    //如果他的父系中有当前的对象,则将当前的类加入到当前对象childrenClasses中
-//                    if (apiInterfaceBean.getSelf2ParentClasses().contains(selfClazz)) {
-//                        serviceBean.getChildrenClasses().add(apiInterfaceBean.getSelfClazz());
-//                    }
-//                }
-//            }
-//        }
-//    }
-
-
-    private void setRetrofitClientBeanList() {
-        Set<Class<?>> clientClasses = new HashSet<>();
-        //获取所有父类
-        for (RetrofitApiInterfaceBean apiInterfaceBean : retrofitApiInterfaceBeanList) {
-            if (apiInterfaceBean.getParentClazz() != null) {
-                clientClasses.add(apiInterfaceBean.getParentClazz());
+        for (RetrofitResourceClientClassBean clientClassBean : resourceClassBean.getClientClassBeans()) {
+            List<RetrofitApiInterfaceBean> belongsApiInterfaceBeans = new ArrayList<>();
+            // find belongs api interface beans
+            for (RetrofitApiInterfaceBean bean : retrofitApiInterfaceBeanList) {
+                for (RetrofitResourceApiInterfaceClassBean classBean : clientClassBean.getApiInterfaceClassBeans()) {
+                    if (classBean.getMyself().equals(bean.getSelfClazz())){
+                        belongsApiInterfaceBeans.add(bean);
+                    }
+                }
             }
-
-        }
-        //完成ClientBean创建
-        for (Class<?> clazz : clientClasses) {
-            RetrofitClientBeanGenerator clientBeanGenerator = new RetrofitClientBeanGenerator(retrofitApiInterfaceBeanList, clazz);
+            RetrofitClientBeanGenerator clientBeanGenerator = new RetrofitClientBeanGenerator(belongsApiInterfaceBeans, clientClassBean.getClientClazz());
             retrofitClientBeanList.add(clientBeanGenerator.generate());
         }
-
     }
 
 
