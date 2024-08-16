@@ -65,7 +65,6 @@ public class RetrofitResourceContextBuilder {
         return new RetrofitResourceClassBean(retrofitBuilderClassSet);
     }
 
-
     public List<RetrofitClientBean> getRetrofitClientBeanList() {
         return retrofitClientBeanList;
     }
