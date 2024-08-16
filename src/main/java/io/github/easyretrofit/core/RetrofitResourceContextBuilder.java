@@ -22,7 +22,6 @@ public class RetrofitResourceContextBuilder {
     private final Map<String, RetrofitApiInterfaceBean> retrofitServiceBeanHashMap;
     private Class<?> retrofitBuilderExtensionClazz;
     private final List<Class<?>> interceptorExtensionsClasses;
-    private final EnvManager envManager;
 
 
     public RetrofitResourceContextBuilder(EnvManager envManager) {
@@ -30,7 +29,6 @@ public class RetrofitResourceContextBuilder {
         retrofitApiInterfaceBeanList = new ArrayList<>();
         retrofitServiceBeanHashMap = new HashMap<>();
         interceptorExtensionsClasses = new ArrayList<>();
-        this.envManager = envManager;
     }
 
     public RetrofitResourceContext buildContextInstance(String[] basePackages,
