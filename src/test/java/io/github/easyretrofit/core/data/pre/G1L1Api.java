@@ -1,4 +1,4 @@
-package io.github.easyretrofit.core.resource.data;//package io.github.easyretrofit.spring.boot.test.inherit;
+package io.github.easyretrofit.core.data.pre;//package io.github.easyretrofit.spring.boot.test.inherit;
 
 import io.github.easyretrofit.core.annotation.RetrofitBase;
 

@@ -1,4 +1,4 @@
-package io.github.easyretrofit.core.resource.data;
+package io.github.easyretrofit.core.data.pre;
 
 import io.github.easyretrofit.core.annotation.RetrofitBuilder;
 
