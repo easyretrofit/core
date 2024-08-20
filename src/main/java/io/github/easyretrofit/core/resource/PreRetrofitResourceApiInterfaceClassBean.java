@@ -1,4 +1,4 @@
-package io.github.easyretrofit.core.resource.pre;
+package io.github.easyretrofit.core.resource;
 
 import io.github.easyretrofit.core.annotation.RetrofitBase;
 import io.github.easyretrofit.core.annotation.RetrofitBuilder;
@@ -6,7 +6,7 @@ import io.github.easyretrofit.core.exception.RetrofitBaseException;
 
 import java.util.*;
 
-public class RetrofitResourceApiInterfaceClassBean {
+public class PreRetrofitResourceApiInterfaceClassBean {
 
     private final Class<?> myself;
 
@@ -14,9 +14,9 @@ public class RetrofitResourceApiInterfaceClassBean {
 
     private LinkedHashSet<Class<?>> self2Ancestors;
 
-    private Set<Class<?>> children;
+    private final Set<Class<?>> children;
 
-    public RetrofitResourceApiInterfaceClassBean(Class<?> myself) {
+    public PreRetrofitResourceApiInterfaceClassBean(Class<?> myself) {
         this.myself = myself;
         this.self2Ancestors = new LinkedHashSet<>();
         this.children = new LinkedHashSet<>();
@@ -39,17 +39,32 @@ public class RetrofitResourceApiInterfaceClassBean {
         return children;
     }
 
-    public void setChildren(Set<Class<?>> children) {
-        this.children = children;
-    }
-
-
     private void fillParentsBean(Class<?> clazz) {
         LinkedHashSet<Class<?>> parentClazzSet = new LinkedHashSet<>();
         this.ancestor = findParentClazzIncludeRetrofitBuilderAndBase(clazz, parentClazzSet);
         this.self2Ancestors =  parentClazzSet;
     }
 
+    @Override
+    public final boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof PreRetrofitResourceApiInterfaceClassBean)) return false;
+
+        PreRetrofitResourceApiInterfaceClassBean that = (PreRetrofitResourceApiInterfaceClassBean) o;
+        return myself.equals(that.myself) &&
+                ancestor.equals(that.ancestor) &&
+                self2Ancestors.equals(that.self2Ancestors) &&
+                children.equals(that.children);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = myself.hashCode();
+        result = 31 * result + ancestor.hashCode();
+        result = 31 * result + self2Ancestors.hashCode();
+        result = 31 * result + children.hashCode();
+        return result;
+    }
 
     private Class<?> findParentClazzIncludeRetrofitBuilderAndBase(Class<?> clazz, Set<Class<?>> parentClazzSet) {
 

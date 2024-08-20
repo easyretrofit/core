@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
  * @author liuziyuan
  */
 public final class RetrofitApiInterfaceBean implements UniqueKey {
-
+    private String retrofitClientBeanInstanceName;
     private Class<?> selfClazz;
     private Class<?> parentClazz;
     private LinkedHashSet<Class<?>> self2ParentClasses;
@@ -24,7 +24,6 @@ public final class RetrofitApiInterfaceBean implements UniqueKey {
     private RetrofitUrl retrofitUrl;
     private RetrofitBuilderBean retrofitBuilder;
     private Set<RetrofitInterceptorBean> myInterceptors;
-    private String retrofitClientBeanInstanceName;
     private Set<Class<? extends BaseExceptionDelegate<? extends RetrofitExtensionException>>> exceptionDelegates;
 
     public RetrofitApiInterfaceBean() {

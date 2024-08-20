@@ -88,6 +88,29 @@ public final class RetrofitClientBean implements UniqueKey {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof RetrofitClientBean)) return false;
+
+        RetrofitClientBean that = (RetrofitClientBean) o;
+        return realHostUrl.equals(that.realHostUrl)
+                && urlStatus == that.urlStatus
+                && retrofitBuilder.equals(that.retrofitBuilder)
+                && interceptors.equals(that.interceptors)
+                && retrofitApiInterfaceBeans.equals(that.retrofitApiInterfaceBeans);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = realHostUrl.hashCode();
+        result = 31 * result + urlStatus.hashCode();
+        result = 31 * result + retrofitBuilder.hashCode();
+        result = 31 * result + interceptors.hashCode();
+        result = 31 * result + retrofitApiInterfaceBeans.hashCode();
+        return result;
+    }
+
+    @Override
     public String toString() {
         String interceptorsStr = null;
         if (interceptors != null) {

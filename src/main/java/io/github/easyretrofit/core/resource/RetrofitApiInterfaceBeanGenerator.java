@@ -5,7 +5,6 @@ import io.github.easyretrofit.core.Generator;
 import io.github.easyretrofit.core.RetrofitBuilderExtension;
 import io.github.easyretrofit.core.RetrofitInterceptorExtension;
 import io.github.easyretrofit.core.annotation.*;
-import io.github.easyretrofit.core.resource.pre.RetrofitResourceApiInterfaceClassBean;
 import io.github.easyretrofit.core.util.ReflectUtils;
 
 import java.lang.annotation.Annotation;
@@ -19,13 +18,13 @@ import java.util.*;
  * @author liuziyuan
  */
 public class RetrofitApiInterfaceBeanGenerator implements Generator<RetrofitApiInterfaceBean> {
-    RetrofitResourceApiInterfaceClassBean bean;
+    PreRetrofitResourceApiInterfaceClassBean bean;
     private final Class<?> clazz;
     private final EnvManager env;
     private final RetrofitBuilderExtension globalRetrofitBuilderExtension;
     private final List<RetrofitInterceptorExtension> interceptorExtensions;
 
-    public RetrofitApiInterfaceBeanGenerator(RetrofitResourceApiInterfaceClassBean bean,
+    public RetrofitApiInterfaceBeanGenerator(PreRetrofitResourceApiInterfaceClassBean bean,
                                              EnvManager env,
                                              RetrofitBuilderExtension globalRetrofitBuilderExtension,
                                              List<RetrofitInterceptorExtension> interceptorExtensions) {
@@ -105,7 +104,7 @@ public class RetrofitApiInterfaceBeanGenerator implements Generator<RetrofitApiI
     }
 
 
-    private Set<RetrofitInterceptorBean> getInterceptors(RetrofitResourceApiInterfaceClassBean bean) {
+    private Set<RetrofitInterceptorBean> getInterceptors(PreRetrofitResourceApiInterfaceClassBean bean) {
         Annotation[] annotations = clazz.getDeclaredAnnotations();
         Set<RetrofitInterceptorBean> retrofitInterceptorAnnotations = new LinkedHashSet<>();
         for (Annotation annotation : annotations) {

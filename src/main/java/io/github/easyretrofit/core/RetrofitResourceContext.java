@@ -7,6 +7,7 @@ import io.github.easyretrofit.core.resource.RetrofitClientBean;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * The top structure contains all the objects created in the starter
@@ -18,7 +19,7 @@ public class RetrofitResourceContext {
     private String[] basePackages;
     private Class<?> retrofitBuilderExtensionClazz;
     private List<Class<?>> interceptorExtensionsClasses;
-    private List<RetrofitClientBean> retrofitClients;
+    private Set<RetrofitClientBean> retrofitClients;
     private Map<String, RetrofitApiInterfaceBean> retrofitApiServices;
     private EnvManager envManager;
 
@@ -27,7 +28,7 @@ public class RetrofitResourceContext {
     }
 
     public RetrofitResourceContext(String[] basePackages,
-                                   List<RetrofitClientBean> retrofitClients,
+                                   Set<RetrofitClientBean> retrofitClients,
                                    Map<String, RetrofitApiInterfaceBean> retrofitApiServices,
                                    Class<?> retrofitBuilderExtensionClazz,
                                    List<Class<?>> interceptorExtensionsClasses,
@@ -40,7 +41,7 @@ public class RetrofitResourceContext {
         this.envManager = envManager;
     }
 
-    public List<RetrofitClientBean> getRetrofitClients() {
+    public Set<RetrofitClientBean> getRetrofitClients() {
         return retrofitClients;
     }
 

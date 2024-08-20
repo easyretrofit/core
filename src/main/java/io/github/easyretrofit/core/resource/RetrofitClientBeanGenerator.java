@@ -30,18 +30,4 @@ public class RetrofitClientBeanGenerator implements Generator<RetrofitClientBean
     }
 
 
-//    private RetrofitClientBean findExistRetrofitClientBean(RetrofitApiInterfaceBean serviceBean, List<RetrofitClientBean> clientBeanList) {
-//        for (RetrofitClientBean clientBean : clientBeanList) {
-//            RetrofitResourceComparer comparer = new RetrofitResourceComparer(clientBean, serviceBean);
-//            if (comparer.isSameHostUrl() &&
-//                    comparer.isDummyUrlCompare() &&
-//                    comparer.isSameRetrofitBuilderInstance() &&
-//                    comparer.isSameInterceptors()) {
-//                return clientBean;
-//            }
-//        }
-//        return null;
-//    }
-
-
 }

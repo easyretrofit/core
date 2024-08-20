@@ -4,6 +4,7 @@ import io.github.easyretrofit.core.OverrideRule;
 import io.github.easyretrofit.core.RetrofitBuilderExtension;
 import io.github.easyretrofit.core.annotation.RetrofitBuilder;
 import io.github.easyretrofit.core.builder.*;
+import io.github.easyretrofit.core.util.ArrayUtils;
 import io.github.easyretrofit.core.util.BooleanUtil;
 import io.github.easyretrofit.core.util.UniqueKeyUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -12,6 +13,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static io.github.easyretrofit.core.util.ArrayUtils.hasSameElement;
 
 
 public final class RetrofitBuilderBean implements UniqueKey {
@@ -229,11 +232,11 @@ public final class RetrofitBuilderBean implements UniqueKey {
     public String toString() {
         String addCallAdapterFactoryStr = null;
         if (addCallAdapterFactory != null) {
-            addCallAdapterFactoryStr = Arrays.stream(addCallAdapterFactory).map(Class::getName).collect(Collectors.joining(","));
+            addCallAdapterFactoryStr = Arrays.stream(addCallAdapterFactory).map(Class::getName).sorted().collect(Collectors.joining(","));
         }
         String addConverterFactoryStr = null;
         if (addConverterFactory != null) {
-            addConverterFactoryStr = Arrays.stream(addConverterFactory).map(Class::getName).collect(Collectors.joining(","));
+            addConverterFactoryStr = Arrays.stream(addConverterFactory).map(Class::getName).sorted().collect(Collectors.joining(","));
         }
         return "RetrofitBuilderBean{" +
                 "enable=" + enable +
@@ -250,7 +253,37 @@ public final class RetrofitBuilderBean implements UniqueKey {
 
     @Override
     public String generateUniqueKey() {
-
         return UniqueKeyUtils.generateUniqueKey(this.toString());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof RetrofitBuilderBean)) return false;
+
+        RetrofitBuilderBean that = (RetrofitBuilderBean) o;
+        return enable == that.enable
+                && validateEagerly == that.validateEagerly
+                && overwriteType == that.overwriteType
+                && baseUrl.equals(that.baseUrl)
+                && hasSameElement(addCallAdapterFactory, that.addCallAdapterFactory)
+                && hasSameElement(addConverterFactory, that.addConverterFactory)
+                && client.equals(that.client)
+                && callbackExecutor.equals(that.callbackExecutor)
+                && callFactory.equals(that.callFactory);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Boolean.hashCode(enable);
+        result = 31 * result + overwriteType.hashCode();
+        result = 31 * result + baseUrl.hashCode();
+        result = 31 * result + ArrayUtils.toSet(addCallAdapterFactory).hashCode();
+        result = 31 * result + ArrayUtils.toSet(addConverterFactory).hashCode();
+        result = 31 * result + client.hashCode();
+        result = 31 * result + callbackExecutor.hashCode();
+        result = 31 * result + callFactory.hashCode();
+        result = 31 * result + Boolean.hashCode(validateEagerly);
+        return result;
     }
 }
