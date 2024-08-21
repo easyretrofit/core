@@ -95,9 +95,7 @@ public final class RetrofitClientBean implements UniqueKey {
         RetrofitClientBean that = (RetrofitClientBean) o;
         return realHostUrl.equals(that.realHostUrl)
                 && urlStatus == that.urlStatus
-                && retrofitBuilder.equals(that.retrofitBuilder)
-                && interceptors.equals(that.interceptors)
-                && retrofitApiInterfaceBeans.equals(that.retrofitApiInterfaceBeans);
+                && retrofitBuilder.equals(that.retrofitBuilder);
     }
 
     @Override
@@ -105,27 +103,20 @@ public final class RetrofitClientBean implements UniqueKey {
         int result = realHostUrl.hashCode();
         result = 31 * result + urlStatus.hashCode();
         result = 31 * result + retrofitBuilder.hashCode();
-        result = 31 * result + interceptors.hashCode();
-        result = 31 * result + retrofitApiInterfaceBeans.hashCode();
         return result;
     }
 
     @Override
     public String toString() {
-        String interceptorsStr = null;
-        if (interceptors != null) {
-            interceptorsStr = interceptors.stream().map(RetrofitInterceptorBean::toString).collect(Collectors.joining(","));
-        }
         return "RetrofitClientBean{" +
                 "realHostUrl='" + realHostUrl + '\'' +
                 ", urlStatus=" + urlStatus.toString() +
-                ", retrofitBuilder=" + retrofitBuilder.toString() +
-                ", interceptors=" + interceptorsStr +
+                ", retrofitBuilder=" + retrofitBuilder.getUniqueKey() +
                 '}';
     }
 
     @Override
-    public String generateUniqueKey() {
+    public String getUniqueKey() {
         return UniqueKeyUtils.generateUniqueKey(this.toString());
     }
 
@@ -134,6 +125,6 @@ public final class RetrofitClientBean implements UniqueKey {
      * important
      */
     public void setRetrofitInstanceName() {
-        this.retrofitInstanceName = Retrofit.class.getSimpleName().concat("@" + this.generateUniqueKey());
+        this.retrofitInstanceName = Retrofit.class.getSimpleName().concat("@" + this.getUniqueKey());
     }
 }

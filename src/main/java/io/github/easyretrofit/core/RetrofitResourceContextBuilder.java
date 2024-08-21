@@ -4,7 +4,7 @@ import io.github.easyretrofit.core.resource.*;
 import io.github.easyretrofit.core.resource.handler.PreRetrofitSourceClassBeanCollectionHandler;
 import io.github.easyretrofit.core.resource.PreRetrofitResourceApiInterfaceClassBean;
 import io.github.easyretrofit.core.resource.handler.RetrofitApiInterfaceBeanCollectionHandler;
-import io.github.easyretrofit.core.resource.handler.RetrofitClientCollectionHandler;
+import io.github.easyretrofit.core.resource.handler.RetrofitClientBeanCollectionHandler;
 //import io.github.easyretrofit.core.resource.pre.RetrofitResourceClientClassBean;
 
 import java.util.*;
@@ -41,7 +41,7 @@ public class RetrofitResourceContextBuilder {
         // step1 generate list of api interface bean
         retrofitApiInterfaceBeanList = new RetrofitApiInterfaceBeanCollectionHandler(apiInterfaceClassBeans, globalRetrofitBuilderExtension, interceptorExtensions, envManager).getRetrofitApiInterfaceBeans();
         // step2 generate list of client bean
-        retrofitClientBeanList = new RetrofitClientCollectionHandler(retrofitApiInterfaceBeanList).getRetrofitClients();
+        retrofitClientBeanList = new RetrofitClientBeanCollectionHandler(retrofitApiInterfaceBeanList).getRetrofitClients();
 //        setRetrofitClientBeanList();
         // step3 set map of api interface bean
         setRetrofitApiInterfaceBeanHashMap();

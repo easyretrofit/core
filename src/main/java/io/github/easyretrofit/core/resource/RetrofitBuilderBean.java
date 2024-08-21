@@ -252,7 +252,7 @@ public final class RetrofitBuilderBean implements UniqueKey {
     }
 
     @Override
-    public String generateUniqueKey() {
+    public String getUniqueKey() {
         return UniqueKeyUtils.generateUniqueKey(this.toString());
     }
 

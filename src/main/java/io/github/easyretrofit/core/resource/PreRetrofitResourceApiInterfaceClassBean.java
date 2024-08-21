@@ -21,6 +21,10 @@ public class PreRetrofitResourceApiInterfaceClassBean {
         this.self2Ancestors = new LinkedHashSet<>();
         this.children = new LinkedHashSet<>();
         fillParentsBean(myself);
+        if (this.myself == this.ancestor) {
+            this.self2Ancestors.add(this.myself);
+            this.children.add(this.myself);
+        }
     }
 
     public LinkedHashSet<Class<?>> getSelf2Ancestors() {
@@ -42,7 +46,7 @@ public class PreRetrofitResourceApiInterfaceClassBean {
     private void fillParentsBean(Class<?> clazz) {
         LinkedHashSet<Class<?>> parentClazzSet = new LinkedHashSet<>();
         this.ancestor = findParentClazzIncludeRetrofitBuilderAndBase(clazz, parentClazzSet);
-        this.self2Ancestors =  parentClazzSet;
+        this.self2Ancestors = parentClazzSet;
     }
 
     @Override

@@ -101,7 +101,7 @@ public final class RetrofitUrl implements UniqueKey {
     }
 
     @Override
-    public String generateUniqueKey() {
+    public String getUniqueKey() {
         return UniqueKeyUtils.generateUniqueKey(this.toString());
     }
 }

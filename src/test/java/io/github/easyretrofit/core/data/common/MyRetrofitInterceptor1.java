@@ -1,4 +1,4 @@
-package io.github.easyretrofit.core.data.clients;
+package io.github.easyretrofit.core.data.common;
 
 import io.github.easyretrofit.core.extension.BaseInterceptor;
 import okhttp3.Request;

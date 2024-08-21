@@ -37,6 +37,7 @@ public class PreRetrofitSourceClassBeanCollectionHandlerTest {
         Set<PreRetrofitResourceApiInterfaceClassBean> interfaceClassBeans = preClassBean.getInterfaceClassBeans();
         assertEquals(interfaceClassBeans.size(), 13);
         PreRetrofitResourceApiInterfaceClassBean bean = interfaceClassBeans.stream().filter(api -> api.getMyself().equals(ComplexApi.class)).findFirst().get();
-        assertEquals(bean.getChildren().size(), 3);
+        assertEquals(bean.getChildren().size(), 4);
+        assertTrue(bean.getChildren().contains(ComplexApi.class));
     }
 }

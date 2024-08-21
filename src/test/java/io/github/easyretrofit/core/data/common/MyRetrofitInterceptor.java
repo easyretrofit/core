@@ -1,4 +1,4 @@
-package io.github.easyretrofit.core.data.builder;
+package io.github.easyretrofit.core.data.common;
 
 import io.github.easyretrofit.core.extension.BaseInterceptor;
 import io.github.easyretrofit.core.resource.RetrofitApiInterfaceBean;

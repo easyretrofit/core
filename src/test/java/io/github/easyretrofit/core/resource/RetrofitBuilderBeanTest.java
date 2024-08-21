@@ -1,7 +1,7 @@
 package io.github.easyretrofit.core.resource;
 
 import io.github.easyretrofit.core.data.builder.BuilderApi;
-import io.github.easyretrofit.core.data.builder.GlobalRetrofitBuilderExtension;
+import io.github.easyretrofit.core.data.common.GlobalRetrofitBuilderExtension;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -22,6 +22,6 @@ public class RetrofitBuilderBeanTest {
 
         assertEquals(retrofitBuilderBean, retrofitBuilderBean2);
         assertEquals(retrofitBuilderBean.hashCode(), retrofitBuilderBean2.hashCode());
-        assertEquals(retrofitBuilderBean.generateUniqueKey(), retrofitBuilderBean2.generateUniqueKey());
+        assertEquals(retrofitBuilderBean.getUniqueKey(), retrofitBuilderBean2.getUniqueKey());
     }
 }

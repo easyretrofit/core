@@ -1,10 +1,9 @@
-package io.github.easyretrofit.core.data.builder;
+package io.github.easyretrofit.core.data.common;
 
 
 import io.github.easyretrofit.core.builder.BaseCallAdapterFactoryBuilder;
 import retrofit2.CallAdapter;
 import retrofit2.adapter.guava.GuavaCallAdapterFactory;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 
 /**
  * @author liuziyuan

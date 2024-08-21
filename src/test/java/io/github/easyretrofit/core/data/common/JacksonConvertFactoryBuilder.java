@@ -1,9 +1,8 @@
-package io.github.easyretrofit.core.data.builder;
+package io.github.easyretrofit.core.data.common;
 
 
 import io.github.easyretrofit.core.builder.BaseConverterFactoryBuilder;
 import retrofit2.Converter;
-import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
 /**

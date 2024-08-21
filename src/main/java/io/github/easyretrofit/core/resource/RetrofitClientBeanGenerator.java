@@ -5,7 +5,8 @@ import io.github.easyretrofit.core.Generator;
 import java.util.List;
 
 /**
- * generate RetrofitClientBean object
+ * generate RetrofitClientBean object<br>
+ * retrofitApiInterfaceBeanList need belong to this clientBeanClass<br>
  *
  * @author liuziyuan
  */

@@ -1,6 +1,6 @@
 package io.github.easyretrofit.core.resource.handler;
 
-import io.github.easyretrofit.core.data.builder.GlobalRetrofitBuilderExtension;
+import io.github.easyretrofit.core.data.common.GlobalRetrofitBuilderExtension;
 import io.github.easyretrofit.core.data.clients.*;
 import io.github.easyretrofit.core.resource.RetrofitApiInterfaceBean;
 import org.junit.Before;
@@ -30,7 +30,8 @@ public class RetrofitApiInterfaceBeanCollectionHandlerTest {
         List<RetrofitApiInterfaceBean> apiInterfaceBeans = new RetrofitApiInterfaceBeanCollectionHandler(classBeanCollectionHandler.getInterfaceClassBeans(), new GlobalRetrofitBuilderExtension(), new ArrayList<>(), new LocalEnvManager()).getRetrofitApiInterfaceBeans();
         assertEquals(4, apiInterfaceBeans.size());
         RetrofitApiInterfaceBean complexApiBean = apiInterfaceBeans.stream().filter(bean -> bean.getSelfClazz().equals(ComplexApi.class)).findFirst().get();
-        assertEquals(complexApiBean.getSelf2ParentClasses().size(), 0);
+        assertEquals(complexApiBean.getSelf2ParentClasses().size(), 1);
+        assertTrue(complexApiBean.getSelf2ParentClasses().contains(ComplexApi.class));
         assertTrue(complexApiBean.getChildrenClasses().contains(ComplexL2Api.class));
         assertTrue(complexApiBean.getChildrenClasses().contains(ComplexL3Api.class));
         assertTrue(complexApiBean.getChildrenClasses().contains(ComplexL4Api.class));
