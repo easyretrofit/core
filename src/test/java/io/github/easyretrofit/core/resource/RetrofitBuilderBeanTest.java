@@ -16,7 +16,7 @@ public class RetrofitBuilderBeanTest {
     }
 
     @Test
-    public void compare() {
+    public void compareTest() {
         RetrofitBuilderBean retrofitBuilderBean = new RetrofitBuilderBean(BuilderApi.class, new GlobalRetrofitBuilderExtension());
         RetrofitBuilderBean retrofitBuilderBean2 = new RetrofitBuilderBean(BuilderApi.class, new GlobalRetrofitBuilderExtension());
 

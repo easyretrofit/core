@@ -9,5 +9,6 @@ import io.github.easyretrofit.core.data.common.*;
         addConverterFactory = {JacksonConvertFactoryBuilder.class, GsonConvertFactoryBuilder.class},
         client = OkHttpClientBuilder2.class)
 @RetrofitInterceptor(handler = MyRetrofitInterceptor.class)
+@RetrofitInterceptor(handler = MyRetrofitInterceptor.class)
 public interface OtherApi {
 }
