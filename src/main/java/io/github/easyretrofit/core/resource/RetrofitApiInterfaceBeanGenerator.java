@@ -43,9 +43,7 @@ public class RetrofitApiInterfaceBeanGenerator implements Generator<RetrofitApiI
         retrofitApiInterfaceBean.setParentClazz(bean.getAncestor());
         retrofitApiInterfaceBean.setSelf2ParentClasses(bean.getSelf2Ancestors());
         retrofitApiInterfaceBean.setChildrenClasses(bean.getChildren());
-        //将RetrofitBuilder注解信息注入到RetrofitBuilderBean中
-        RetrofitBuilderBean retrofitBuilderBean = new RetrofitBuilderBean(bean.getAncestor(), globalRetrofitBuilderExtension);
-        retrofitApiInterfaceBean.setRetrofitBuilder(retrofitBuilderBean);
+        // set interceptor
         Set<RetrofitInterceptorBean> myInterceptors = getInterceptors(bean);
         if (interceptorExtensions != null) {
             for (RetrofitInterceptorExtension interceptorExtension : interceptorExtensions) {
@@ -53,8 +51,12 @@ public class RetrofitApiInterfaceBeanGenerator implements Generator<RetrofitApiI
             }
         }
         retrofitApiInterfaceBean.setMyInterceptors(myInterceptors);
+        // set retrofitBuilder
+        RetrofitBuilderBean retrofitBuilderBean = new RetrofitBuilderBean(bean.getAncestor(), globalRetrofitBuilderExtension);
         RetrofitUrl retrofitUrl = getRetrofitUrl(retrofitBuilderBean);
         retrofitApiInterfaceBean.setRetrofitUrl(retrofitUrl);
+        retrofitBuilderBean.setBaseUrl(retrofitUrl.getInputDefaultBaseUrl());
+        retrofitApiInterfaceBean.setRetrofitBuilder(retrofitBuilderBean);
         return retrofitApiInterfaceBean;
     }
 
