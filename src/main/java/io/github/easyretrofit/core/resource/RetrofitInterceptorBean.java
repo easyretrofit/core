@@ -9,6 +9,7 @@ import io.github.easyretrofit.core.util.UniqueKeyUtils;
 
 import java.util.Arrays;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public final class RetrofitInterceptorBean implements UniqueKey {
     private final Class<? extends BaseInterceptor> handler;
@@ -100,9 +101,9 @@ public final class RetrofitInterceptorBean implements UniqueKey {
         return "RetrofitInterceptorBean{" +
                 "handler=" + handler +
                 ", type=" + type +
-                ", defaultScopeClasses=" + ArrayUtils.toSet(defaultScopeClasses).hashCode() +
-                ", include=" + ArrayUtils.toSet(include).hashCode() +
-                ", exclude=" + ArrayUtils.toSet(exclude).hashCode() +
+                ", defaultScopeClasses=" + Arrays.stream(defaultScopeClasses).map(Class::getName).map(String::toString).collect(Collectors.joining()) +
+                ", include=" + Arrays.stream(include).map(String::toString).collect(Collectors.joining()) +
+                ", exclude=" + Arrays.stream(exclude).map(String::toString).collect(Collectors.joining()) +
                 ", sort=" + sort +
                 '}';
     }
