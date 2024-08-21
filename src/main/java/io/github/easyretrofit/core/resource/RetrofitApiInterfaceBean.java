@@ -133,24 +133,19 @@ public final class RetrofitApiInterfaceBean implements UniqueKey {
 
     @Override
     public String toString() {
-//        String interceptorStr = null;
-//        if (interceptors != null) {
-//            interceptorStr = interceptors.stream().map(RetrofitInterceptorBean::toString).collect(Collectors.joining(","));
-//        }
         String myInterceptorStr = null;
         if (myInterceptors != null) {
-            myInterceptorStr = myInterceptors.stream().map(RetrofitInterceptorBean::toString).collect(Collectors.joining(","));
+            myInterceptorStr = myInterceptors.stream().map(RetrofitInterceptorBean::toString).sorted().collect(Collectors.joining(","));
         }
         String exceptionDelegateStr = null;
         if (exceptionDelegates != null) {
-            exceptionDelegateStr = exceptionDelegates.stream().map(Class::getName).collect(Collectors.joining(","));
+            exceptionDelegateStr = exceptionDelegates.stream().map(Class::getName).sorted().collect(Collectors.joining(","));
         }
         return "RetrofitApiServiceBean{" +
                 "selfClazz=" + selfClazz +
                 ", parentClazz=" + parentClazz +
-                ", retrofitUrl=" + retrofitUrl.toString() +
-                ", retrofitBuilder=" + retrofitBuilder.toString() +
-//                ", interceptors=" + interceptorStr +
+                ", retrofitUrl=" + retrofitUrl.getUniqueKey() +
+                ", retrofitBuilder=" + retrofitBuilder.getUniqueKey() +
                 ", myInterceptors=" + myInterceptorStr +
                 ", exceptionDelegates=" + exceptionDelegateStr +
                 '}';
