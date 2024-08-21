@@ -16,7 +16,17 @@ public class RetrofitClientBeanCollectionHandler {
 
     public Set<RetrofitClientBean> getRetrofitClients() {
         List<RetrofitClientBean> baseRetrofitClients = getBaseRetrofitClients();
-        return getSingleRetrofitClients(baseRetrofitClients);
+        Set<RetrofitClientBean> singleRetrofitClients = getSingleRetrofitClients(baseRetrofitClients);
+        setRetrofitClient2ApiInterfaceBeans(singleRetrofitClients);
+        return singleRetrofitClients;
+    }
+
+    private void setRetrofitClient2ApiInterfaceBeans(Set<RetrofitClientBean> singleRetrofitClients) {
+        for (RetrofitClientBean retrofitClientBean : singleRetrofitClients) {
+            for (RetrofitApiInterfaceBean retrofitApiInterfaceBean : retrofitClientBean.getRetrofitApiInterfaceBeans()) {
+                retrofitApiInterfaceBean.setRetrofitClientBean(retrofitClientBean);
+            }
+        }
     }
 
     private List<RetrofitClientBean> getBaseRetrofitClients() {
