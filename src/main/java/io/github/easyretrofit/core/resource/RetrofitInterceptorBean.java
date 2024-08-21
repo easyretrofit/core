@@ -100,9 +100,9 @@ public final class RetrofitInterceptorBean implements UniqueKey {
         return "RetrofitInterceptorBean{" +
                 "handler=" + handler +
                 ", type=" + type +
-                ", defaultScopeClasses=" + Arrays.stream(defaultScopeClasses).sorted().toString() +
-                ", include=" + Arrays.stream(include).sorted().toString() +
-                ", exclude=" + Arrays.stream(exclude).sorted().toString() +
+                ", defaultScopeClasses=" + ArrayUtils.toSet(defaultScopeClasses).hashCode() +
+                ", include=" + ArrayUtils.toSet(include).hashCode() +
+                ", exclude=" + ArrayUtils.toSet(exclude).hashCode() +
                 ", sort=" + sort +
                 '}';
     }

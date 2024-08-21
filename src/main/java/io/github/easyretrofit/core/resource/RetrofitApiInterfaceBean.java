@@ -135,11 +135,11 @@ public final class RetrofitApiInterfaceBean implements UniqueKey {
     public String toString() {
         String myInterceptorStr = null;
         if (myInterceptors != null) {
-            myInterceptorStr = myInterceptors.stream().map(RetrofitInterceptorBean::toString).sorted().collect(Collectors.joining(","));
+            myInterceptorStr = String.valueOf(myInterceptors.stream().map(RetrofitInterceptorBean::getUniqueKey).collect(Collectors.toSet()).hashCode());
         }
         String exceptionDelegateStr = null;
         if (exceptionDelegates != null) {
-            exceptionDelegateStr = exceptionDelegates.stream().map(Class::getName).sorted().collect(Collectors.joining(","));
+            exceptionDelegateStr = String.valueOf(exceptionDelegates.stream().map(Class::getName).collect(Collectors.toSet()).hashCode());
         }
         return "RetrofitApiServiceBean{" +
                 "selfClazz=" + selfClazz +
