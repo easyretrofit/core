@@ -11,6 +11,6 @@ import java.lang.annotation.*;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})
-public @interface RetrofitUrlPrefix {
+public @interface RetrofitPath {
     String value() default StringUtils.EMPTY;
 }

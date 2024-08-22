@@ -96,12 +96,12 @@ public class RetrofitApiInterfaceBeanGenerator implements Generator<RetrofitApiI
 
 
     private RetrofitUrl getRetrofitUrl(RetrofitBuilderBean retrofitBuilderBean) {
-        final RetrofitUrlPrefix retrofitUrlPrefix = clazz.getDeclaredAnnotation(RetrofitUrlPrefix.class);
+        final RetrofitPath retrofitPath = clazz.getDeclaredAnnotation(RetrofitPath.class);
         final RetrofitDynamicBaseUrl retrofitDynamicBaseUrl = clazz.getDeclaredAnnotation(RetrofitDynamicBaseUrl.class);
         String retrofitDynamicBaseUrlValue = retrofitDynamicBaseUrl == null ? null : retrofitDynamicBaseUrl.value();
         return new RetrofitUrl(retrofitBuilderBean.getBaseUrl(),
                 retrofitDynamicBaseUrlValue,
-                retrofitUrlPrefix == null ? null : retrofitUrlPrefix.value(),
+                retrofitPath == null ? null : retrofitPath.value(),
                 env);
     }
 
