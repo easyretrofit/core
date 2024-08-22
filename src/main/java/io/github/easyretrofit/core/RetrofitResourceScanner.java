@@ -16,13 +16,20 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
- * Scan retrofit API resources using @RetrofitBuilder
+ * <p>Scan the resources required for easy-retrofit in the customized packages</p>
+ * <p>When you create a server-side web framework extension based on easy-retrofit-core, you need to call this class to complete the scanning of resources</p>
  *
  * @author liuziyuan
  */
 
 public class RetrofitResourceScanner {
     private static final Logger log = LoggerFactory.getLogger(RetrofitResourceScanner.class);
+
+    /**
+     * Scan retrofit resources when using @RetrofitBuilder or @RetrofitBase annotation <br>
+     * @param basePackages packages that need to be scanned
+     * @return easy-retrofit base resources
+     */
     public Set<Class<?>> doScan(String... basePackages) {
         Reflections reflections = getReflections(basePackages);
         final Set<Class<?>> retrofitBuilderClasses = getRetrofitResourceClasses(reflections, RetrofitBuilder.class);
@@ -31,6 +38,11 @@ public class RetrofitResourceScanner {
         return retrofitBuilderClasses;
     }
 
+    /**
+     * Scan retrofit extension resources when implemented RetrofitBuilderExtension interface or RetrofitInterceptorExtension interface
+     * @param basePackages Java packages that need to be scanned
+     * @return easy-retrofit extension resources
+     */
     public RetrofitExtension doScanExtension(String... basePackages) {
         Reflections reflections = getReflections(basePackages);
         RetrofitExtension retrofitExtension = new RetrofitExtension();
@@ -41,12 +53,7 @@ public class RetrofitResourceScanner {
         return retrofitExtension;
     }
 
-    public Set<Class<?>> getRetrofitResource(Class<? extends Annotation> clazz, String... basePackages) {
-        Reflections reflections = getReflections(basePackages);
-        return reflections.getTypesAnnotatedWith(clazz);
-    }
-
-    public Set<Class<?>> getRetrofitResourceClasses(Reflections reflections, Class<? extends Annotation> annotationClass) {
+    private Set<Class<?>> getRetrofitResourceClasses(Reflections reflections, Class<? extends Annotation> annotationClass) {
         final Set<Class<?>> classSet = reflections.getTypesAnnotatedWith(annotationClass);
         Iterator<Class<?>> iterator = classSet.iterator();
         while (iterator.hasNext()) {
