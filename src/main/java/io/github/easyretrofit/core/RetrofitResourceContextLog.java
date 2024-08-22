@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 /**
  * <p>Print logs in the launcher</p>
  * <p>When you create a server-side web framework extension based on easy-retrofit-core, you need to call this class to complete easy-retrofit launcher log printing</p>
+ *
  * @author liuziyuan
  */
 public class RetrofitResourceContextLog {
@@ -30,11 +31,12 @@ public class RetrofitResourceContextLog {
     }
 
     /**
-     * Print all plugins information for easy-retrofit
-     * @param logBeans List of all plugins information for easy-retrofit
+     * Print logo and log information for easy-retrofit
+     *
+     * @param logBean easy-retrofit information in web framework
      */
-    public void showLog(List<RetrofitExtensionLogBean> logBeans) {
-        getLogoInfo(logBeans);
+    public void showLog(RetrofitWebFramewrokInfoBean logBean) {
+        getLogoInfo(logBean);
 
         for (RetrofitClientBean retrofitClient : context.getRetrofitClients()) {
             final String retrofitInstanceName = retrofitClient.getRetrofitInstanceName();
@@ -58,7 +60,7 @@ public class RetrofitResourceContextLog {
         }
     }
 
-    private void getLogoInfo(List<RetrofitExtensionLogBean> logBeans){
+    private void getLogoInfo(RetrofitWebFramewrokInfoBean logBean) {
         String logo = "\n" +
                 " ___  __    ____   __   ___ ___ _____ ___  __  ___ _ _____  \n" +
                 "| __|/  \\ /' _| `v' /__| _ \\ __|_   _| _ \\/__\\| __| |_   _| \n" +
@@ -81,12 +83,26 @@ public class RetrofitResourceContextLog {
         sb.append(LOG_INFO);
         params.add(pkgInfo.getImplementationTitle());
         params.add(pkgInfo.getImplementationVersion());
-        for (RetrofitExtensionLogBean logBean : logBeans) {
-            if (logBean.getTitle() == null)
-                continue;
+        if (logBean.getTitle() != null && logBean.getVersion() != null) {
             sb.append(LOG_INFO);
             params.add(logBean.getTitle() == null ? "" : logBean.getTitle());
             params.add(logBean.getVersion() == null ? "" : logBean.getVersion());
+
+            Class<?> builderExtensionClazz = context.getRetrofitBuilderExtensionClazz();
+            if (builderExtensionClazz.getPackage().getImplementationTitle() != null) {
+                sb.append(LOG_INFO);
+                params.add(builderExtensionClazz.getPackage().getImplementationTitle());
+                params.add(builderExtensionClazz.getPackage().getImplementationVersion());
+            }
+            List<Class<?>> interceptorExtensionsClasses = context.getInterceptorExtensionsClasses();
+            for (Class<?> interceptorExtensionsClass : interceptorExtensionsClasses) {
+                if (interceptorExtensionsClass.getPackage().getImplementationTitle() == null) {
+                    continue;
+                }
+                sb.append(LOG_INFO);
+                params.add(interceptorExtensionsClass.getPackage().getImplementationTitle());
+                params.add(interceptorExtensionsClass.getPackage().getImplementationVersion());
+            }
         }
         String logStr = sb.toString();
         log.info(logStr, params.toArray());

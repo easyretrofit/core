@@ -1,11 +1,11 @@
 package io.github.easyretrofit.core;
 
-public class RetrofitExtensionLogBean {
+public class RetrofitWebFramewrokInfoBean {
 
     private final String title;
     private final String version;
 
-    public RetrofitExtensionLogBean(String title, String version)
+    public RetrofitWebFramewrokInfoBean(String title, String version)
     {
         this.title = title;
         this.version = version;
