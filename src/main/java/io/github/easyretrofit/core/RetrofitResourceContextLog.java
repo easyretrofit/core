@@ -89,7 +89,7 @@ public class RetrofitResourceContextLog {
             params.add(logBean.getVersion() == null ? "" : logBean.getVersion());
 
             Class<?> builderExtensionClazz = context.getRetrofitBuilderExtensionClazz();
-            if (builderExtensionClazz.getPackage().getImplementationTitle() != null) {
+            if (builderExtensionClazz.getPackage().getImplementationTitle() != null && !params.stream().anyMatch(s -> s.equals(logBean.getTitle()))) {
                 sb.append(LOG_INFO);
                 params.add(builderExtensionClazz.getPackage().getImplementationTitle());
                 params.add(builderExtensionClazz.getPackage().getImplementationVersion());
