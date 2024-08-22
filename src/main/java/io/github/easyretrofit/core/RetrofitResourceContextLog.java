@@ -8,18 +8,30 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * <p>Print logs in the launcher</p>
+ * <p>When you create a server-side web framework extension based on easy-retrofit-core, you need to call this class to complete easy-retrofit launcher log printing</p>
+ * @author liuziyuan
+ */
 public class RetrofitResourceContextLog {
     private static final Logger log = LoggerFactory.getLogger(RetrofitResourceContextLog.class);
+
+    private final static String LOG_INFO = "::{} :: ({})\n";
     private final RetrofitResourceContext context;
+
 
     public RetrofitResourceContextLog(RetrofitResourceContext context) {
         this.context = context;
     }
 
-    public void showLog() {
+    public void showLog(List<RetrofitExtensionLogBean> logBeans) {
+        getLogoInfo(logBeans);
+
         for (RetrofitClientBean retrofitClient : context.getRetrofitClients()) {
             final String retrofitInstanceName = retrofitClient.getRetrofitInstanceName();
             final String realHostUrl = retrofitClient.getRealHostUrl();
@@ -40,6 +52,36 @@ public class RetrofitResourceContextLog {
                 log.debug(retrofitService.toString());
             }
         }
+    }
+
+    private void getLogoInfo(List<RetrofitExtensionLogBean> logBeans){
+
+        String logo = "\n" +
+                "____ ___  ___  _         ____ ____ ____ ____ ____ ____ ____ ____ \n" +
+                "| __\\|  \\ | _\\ ||_/\\ ___ | . \\| __\\|_ _\\| . \\|   ||  _\\|___\\|_ _\\\n" +
+                "|  ]_| . \\[__ \\| __/|___\\|  <_|  ]_  || |  <_| . || _\\ | /    || \n" +
+                "|___/|/\\_/|___/|/        |/\\_/|___/  |/ |/\\_/|___/|/   |/     |/ \n";
+        StringBuilder sb = new StringBuilder();
+        sb.append(logo);
+        List<String> params = new ArrayList<>();
+        //add retrofit info
+        sb.append(LOG_INFO);
+        Package pkgInfo = this.getClass().getPackage();
+        params.add(pkgInfo.getSpecificationTitle());
+        params.add(pkgInfo.getSpecificationVersion());
+        //add easy-retrofit info
+        sb.append(LOG_INFO);
+        params.add(pkgInfo.getImplementationTitle());
+        params.add(pkgInfo.getImplementationVersion());
+        for (RetrofitExtensionLogBean logBean : logBeans) {
+            if (logBean.getTitle() == null)
+                continue;
+            sb.append(LOG_INFO);
+            params.add(logBean.getTitle() == null ? "" : logBean.getTitle());
+            params.add(logBean.getVersion() == null ? "" : logBean.getVersion());
+        }
+        String logStr = sb.toString();
+        log.info(logStr, params.toArray());
     }
 
 
