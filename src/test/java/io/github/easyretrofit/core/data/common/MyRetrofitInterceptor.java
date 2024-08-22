@@ -19,7 +19,7 @@ public class MyRetrofitInterceptor extends BaseInterceptor {
     protected Response executeIntercept(Chain chain) throws IOException {
         Request request = chain.request();
         String clazzName = Objects.requireNonNull(request.tag(Invocation.class)).method().getDeclaringClass().getName();
-        final RetrofitApiInterfaceBean currentServiceBean = context.getRetrofitApiServiceBean(clazzName);
+        final RetrofitApiInterfaceBean currentServiceBean = context.getRetrofitApiInterfaceBean(clazzName);
         // TODO if you need
         return chain.proceed(request);
     }

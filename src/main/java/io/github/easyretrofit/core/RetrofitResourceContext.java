@@ -20,7 +20,7 @@ public class RetrofitResourceContext {
     private Class<?> retrofitBuilderExtensionClazz;
     private List<Class<?>> interceptorExtensionsClasses;
     private Set<RetrofitClientBean> retrofitClients;
-    private Map<String, RetrofitApiInterfaceBean> retrofitApiServices;
+    private Map<String, RetrofitApiInterfaceBean> retrofitApiInterfaces;
     private EnvManager envManager;
 
     public RetrofitResourceContext() {
@@ -29,11 +29,11 @@ public class RetrofitResourceContext {
 
     public RetrofitResourceContext(String[] basePackages,
                                    Set<RetrofitClientBean> retrofitClients,
-                                   Map<String, RetrofitApiInterfaceBean> retrofitApiServices,
+                                   Map<String, RetrofitApiInterfaceBean> retrofitApiInterfaces,
                                    Class<?> retrofitBuilderExtensionClazz,
                                    List<Class<?>> interceptorExtensionsClasses,
                                    EnvManager envManager) {
-        this.retrofitApiServices = retrofitApiServices;
+        this.retrofitApiInterfaces = retrofitApiInterfaces;
         this.retrofitClients = retrofitClients;
         this.basePackages = basePackages;
         this.retrofitBuilderExtensionClazz = retrofitBuilderExtensionClazz;
@@ -45,12 +45,12 @@ public class RetrofitResourceContext {
         return retrofitClients;
     }
 
-    public RetrofitApiInterfaceBean getRetrofitApiServiceBean(String clazzFullName) {
-        return retrofitApiServices.get(clazzFullName);
+    public RetrofitApiInterfaceBean getRetrofitApiInterfaceBean(String clazzFullName) {
+        return retrofitApiInterfaces.get(clazzFullName);
     }
 
-    public RetrofitApiInterfaceBean getRetrofitApiServiceBean(Class<?> clazz) {
-        return retrofitApiServices.get(clazz.getName());
+    public RetrofitApiInterfaceBean getRetrofitApiInterfaceBean(Class<?> clazz) {
+        return retrofitApiInterfaces.get(clazz.getName());
     }
 
     public String[] getBasePackages() {

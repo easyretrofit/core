@@ -24,7 +24,7 @@ public class DynamicBaseUrlInterceptor extends BaseInterceptor {
         Request request = chain.request();
         final Method method = super.getRequestMethod(request);
         String clazzName = super.getClazzNameByMethod(method);
-        final RetrofitApiInterfaceBean currentServiceBean = super.context.getRetrofitApiServiceBean(clazzName);
+        final RetrofitApiInterfaceBean currentServiceBean = super.context.getRetrofitApiInterfaceBean(clazzName);
         final String realDynamicHostUrl = currentServiceBean.getRetrofitUrl().getDynamicUrl().getRealHostUrl();
         if (StringUtils.isNotEmpty(realDynamicHostUrl)) {
             final HttpUrl httpUrl = HttpUrl.get(realDynamicHostUrl);
