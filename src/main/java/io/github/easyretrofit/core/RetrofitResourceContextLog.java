@@ -29,6 +29,10 @@ public class RetrofitResourceContextLog {
         this.context = context;
     }
 
+    /**
+     * Print all plugins information for easy-retrofit
+     * @param logBeans List of all plugins information for easy-retrofit
+     */
     public void showLog(List<RetrofitExtensionLogBean> logBeans) {
         getLogoInfo(logBeans);
 
