@@ -39,10 +39,10 @@ public abstract class BaseInterceptor implements Interceptor {
         String path = request.url().encodedPath();
         Method method = this.getRequestMethod(request);
         String clazzName = this.getClazzNameByMethod(method);
-        if (!functionInDefaultScope(clazzName) && isMatch(exclude, path)) {
+        if (!functionInDefaultScope(clazzName) || functionInDefaultScope(clazzName) && isMatch(exclude, path)) {
             return chain.proceed(request);
         }
-        if (!functionInDefaultScope(clazzName) && include != null && !isMatch(include, path)) {
+        if (!functionInDefaultScope(clazzName) || functionInDefaultScope(clazzName) && include != null && !isMatch(include, path)) {
             return chain.proceed(request);
         }
         return executeIntercept(chain);
