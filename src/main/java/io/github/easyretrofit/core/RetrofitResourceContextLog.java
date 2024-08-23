@@ -139,7 +139,8 @@ public class RetrofitResourceContextLog {
         Map<Class<?>, Set<RetrofitInterceptorBean>> parentInterceptors = getParentInterceptors(retrofitApiInterface, retrofitClient);
         for (Map.Entry<Class<?>, Set<RetrofitInterceptorBean>> entry : parentInterceptors.entrySet()) {
             for (RetrofitInterceptorBean retrofitInterceptorBean : entry.getValue()) {
-                log.debug("   |--INTERCEPTOR INFO: handler: {} , belongsTo: {}", retrofitInterceptorBean.getHandler(), entry.getKey());
+                log.debug("   |--INTERCEPTOR INFO: handler: {}", retrofitInterceptorBean.getHandler());
+                log.debug("      |--belongsTo: {}", entry.getKey());
                 log.debug("      |--type: {}", retrofitInterceptorBean.getType());
                 log.debug("      |--defaultScopeClasses: {}", StringUtils.join(retrofitInterceptorBean.getDefaultScopeClasses(), ","));
                 log.debug("      |--include: {}", StringUtils.join(retrofitInterceptorBean.getInclude(), ","));
