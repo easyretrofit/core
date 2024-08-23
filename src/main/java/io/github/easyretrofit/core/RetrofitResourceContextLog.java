@@ -51,7 +51,7 @@ public class RetrofitResourceContextLog {
                 }
                 final String self2ParentClasses = StringUtils.join(retrofitApiInterface.getSelf2ParentClasses(), "->");
                 final String childrenClasses = StringUtils.join(retrofitApiInterface.getChildrenClasses(), ",");
-                log.info("|--API Interface Info: name: {} , rootName: {}, self2RootPath: {}, childrenName: {}", selfClazz.getName(), parentClazzName, self2ParentClasses, childrenClasses);
+                log.info("|--API INTERFACE INFO: name: {} , rootName: {}, self2RootPath: {}, childrenName: {}", selfClazz.getName(), parentClazzName, self2ParentClasses, childrenClasses);
                 retrofitApiInterfaceDebugLog(retrofitApiInterface, retrofitClient);
             }
             index++;
@@ -133,7 +133,6 @@ public class RetrofitResourceContextLog {
     }
 
     private void retrofitApiInterfaceDebugLog(RetrofitApiInterfaceBean retrofitApiInterface, RetrofitClientBean retrofitClient) {
-        log.debug("   |--Retrofit Client Instance Name: {}", retrofitApiInterface.getRetrofitClientBeanInstanceName());
         Map<Class<?>, Set<RetrofitInterceptorBean>> parentInterceptors = getParentInterceptors(retrofitApiInterface, retrofitClient);
         for (Map.Entry<Class<?>, Set<RetrofitInterceptorBean>> entry : parentInterceptors.entrySet()) {
             for (RetrofitInterceptorBean retrofitInterceptorBean : entry.getValue()) {
