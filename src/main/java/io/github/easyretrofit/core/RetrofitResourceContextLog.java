@@ -151,6 +151,9 @@ public class RetrofitResourceContextLog {
         List<RetrofitApiInterfaceBean> retrofitApiInterfaceBeans = retrofitClient.getRetrofitApiInterfaceBeans();
         LinkedHashSet<Class<?>> self2ParentClasses = retrofitApiInterface.getSelf2ParentClasses();
         Map<Class<?>, Set<RetrofitInterceptorBean>> activeInterceptorMap = new HashMap<>();
+        // add myself interceptor
+        activeInterceptorMap.put(retrofitApiInterface.getSelfClazz(), retrofitApiInterface.getMyInterceptors());
+        // add parents interceptor
         for (Class<?> self2ParentClass : self2ParentClasses) {
             RetrofitApiInterfaceBean apiInterfaceBean = retrofitApiInterfaceBeans.stream().filter(api -> api.getSelfClazz().equals(self2ParentClass)).findFirst().get();
             activeInterceptorMap.put(self2ParentClass, apiInterfaceBean.getMyInterceptors());
