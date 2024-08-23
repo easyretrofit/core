@@ -66,7 +66,7 @@ public class RetrofitApiInterfaceBeanGenerator implements Generator<RetrofitApiI
             if (extensionAnnotation != null) {
                 RetrofitInterceptor interceptorAnnotation = extensionAnnotation.annotationType().getAnnotation(RetrofitInterceptor.class);
                 if (interceptorAnnotation != null) {
-                    RetrofitInterceptorBean retrofitInterceptorBean = new RetrofitInterceptorBean(interceptorAnnotation, bean.getChildren());
+                    RetrofitInterceptorBean retrofitInterceptorBean = new RetrofitInterceptorBean(interceptorAnnotation, getDefaultScopeClasses(bean));
                     retrofitInterceptorBean = getInterceptorParamsAnnotation(interceptorExtension, apiClazz, interceptorAnnotation, retrofitInterceptorBean);
                     assert Objects.requireNonNull(retrofitInterceptorBean).getHandler() == interceptorExtension.createInterceptor();
                     if (interceptorExtension.createExceptionDelegate() != null) {
@@ -88,7 +88,7 @@ public class RetrofitApiInterfaceBeanGenerator implements Generator<RetrofitApiI
                 String paramsName = method.getName();
                 RetrofitInterceptorParam extensionObj = (RetrofitInterceptorParam) ReflectUtils.getMethodReturnValue(declaredAnnotation, paramsName);
                 assert extensionObj != null;
-                return new RetrofitInterceptorBean(interceptorAnnotation, extensionObj, bean.getChildren());
+                return new RetrofitInterceptorBean(interceptorAnnotation, extensionObj, getDefaultScopeClasses(bean));
             }
         }
         return retrofitInterceptorBean;
@@ -113,13 +113,20 @@ public class RetrofitApiInterfaceBeanGenerator implements Generator<RetrofitApiI
             if (annotation instanceof Interceptors) {
                 RetrofitInterceptor[] values = ((Interceptors) annotation).value();
                 for (RetrofitInterceptor retrofitInterceptor : values) {
-                    retrofitInterceptorAnnotations.add(new RetrofitInterceptorBean(retrofitInterceptor, bean.getChildren()));
+                    retrofitInterceptorAnnotations.add(new RetrofitInterceptorBean(retrofitInterceptor, getDefaultScopeClasses(bean)));
                 }
             } else if (annotation instanceof RetrofitInterceptor) {
-                retrofitInterceptorAnnotations.add(new RetrofitInterceptorBean((RetrofitInterceptor) annotation, bean.getChildren()));
+                retrofitInterceptorAnnotations.add(new RetrofitInterceptorBean((RetrofitInterceptor) annotation, getDefaultScopeClasses(bean)));
             }
         }
         return retrofitInterceptorAnnotations;
+    }
+
+    private Set<Class<?>> getDefaultScopeClasses(PreRetrofitResourceApiInterfaceClassBean bean) {
+        Set<Class<?>> defaultScopeClasses = new LinkedHashSet<>();
+        defaultScopeClasses.add(bean.getMyself());
+        defaultScopeClasses.addAll(bean.getChildren());
+        return defaultScopeClasses;
     }
 
 
