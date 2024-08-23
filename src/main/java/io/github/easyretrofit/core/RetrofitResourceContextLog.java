@@ -1,16 +1,11 @@
 package io.github.easyretrofit.core;
 
-import io.github.easyretrofit.core.resource.RetrofitApiInterfaceBean;
-import io.github.easyretrofit.core.resource.RetrofitBuilderBean;
-import io.github.easyretrofit.core.resource.RetrofitClientBean;
-import io.github.easyretrofit.core.resource.UrlStatus;
+import io.github.easyretrofit.core.resource.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -21,7 +16,6 @@ import java.util.stream.Collectors;
  */
 public class RetrofitResourceContextLog {
     private static final Logger log = LoggerFactory.getLogger(RetrofitResourceContextLog.class);
-
     private final static String LOG_INFO = "::{} :: ({})\n";
     private final RetrofitResourceContext context;
 
@@ -37,26 +31,33 @@ public class RetrofitResourceContextLog {
      */
     public void showLog(RetrofitWebFramewrokInfoBean logBean) {
         getLogoInfo(logBean);
-
+        int index = 0;
         for (RetrofitClientBean retrofitClient : context.getRetrofitClients()) {
+            log.info("==========================RETROFIT CLIENT INFO [{}] BEGIN==========================", index);
             final String retrofitInstanceName = retrofitClient.getRetrofitInstanceName();
             final String realHostUrl = retrofitClient.getRealHostUrl();
             if (retrofitClient.getUrlStatus().equals(UrlStatus.DYNAMIC_URL_ONLY)) {
-                log.warn("---Retrofit Client : HostURL[Dummy]: {}, Retrofit instance name: {}", realHostUrl, retrofitInstanceName);
+                log.warn("*--RETROFIT CLIENT INFO [{}]: hostURL[Dummy]: {}, retrofitInstanceName: {}", index, realHostUrl, retrofitInstanceName);
             } else {
-                log.info("---Retrofit Client : HostURL: {}, Retrofit instance name: {}", realHostUrl, retrofitInstanceName);
+                log.info("*--RETROFIT CLIENT INFO [{}]: hostURL: {}, retrofitInstanceName: {}", index, realHostUrl, retrofitInstanceName);
             }
             retrofitClientDebugLog(retrofitClient);
-            for (RetrofitApiInterfaceBean retrofitService : retrofitClient.getRetrofitApiInterfaceBeans()) {
-                final Class<?> selfClazz = retrofitService.getSelfClazz();
-                final Class<?> parentClazz = retrofitService.getParentClazz();
+            for (RetrofitApiInterfaceBean retrofitApiInterface : retrofitClient.getRetrofitApiInterfaceBeans()) {
+                final Class<?> selfClazz = retrofitApiInterface.getSelfClazz();
+                final Class<?> parentClazz = retrofitApiInterface.getParentClazz();
                 String parentClazzName = null;
                 if (!parentClazz.getName().equals(selfClazz.getName())) {
                     parentClazzName = parentClazz.getName();
                 }
-                log.info("|--API Services: Interface name: {} , Parent Interface name: {}", selfClazz.getName(), parentClazzName);
-                log.debug(retrofitService.toString());
+                final String self2ParentClasses = StringUtils.join(retrofitApiInterface.getSelf2ParentClasses(), "->");
+                final String childrenClasses = StringUtils.join(retrofitApiInterface.getChildrenClasses(), ",");
+                log.info("|--API Interface Info: name: {} , rootName: {}, self2RootPath: {}, childrenName: {}", selfClazz.getName(), parentClazzName, self2ParentClasses, childrenClasses);
+                retrofitApiInterfaceDebugLog(retrofitApiInterface, retrofitClient);
             }
+            index++;
+            log.info("==========================RETROFIT CLIENT INFO [{}] END==========================", index);
+
+            log.info("");
         }
     }
 
@@ -108,7 +109,6 @@ public class RetrofitResourceContextLog {
         log.info(logStr, params.toArray());
     }
 
-
     private void retrofitClientDebugLog(RetrofitClientBean retrofitClient) {
         RetrofitBuilderBean retrofitBuilder = retrofitClient.getRetrofitBuilder();
         final String realHostUrl = retrofitClient.getRealHostUrl();
@@ -119,9 +119,42 @@ public class RetrofitResourceContextLog {
         String clientString = retrofitBuilder.getClient().getSimpleName();
         String callFactoryString = retrofitBuilder.getCallFactory().getSimpleName();
         String validateEagerlyString = retrofitBuilder.isValidateEagerly() ? "true" : "false";
-        String interceptor = retrofitClient.getInterceptors().toString();
-        log.debug("RetrofitClientBean: HostURL: {}; UrlStatus: {}; globalEnable: {}; CallAdapterFactory: {}; ConverterFactory:{}; callbackExecutor: {}; client: {}; callFactory: {}; validateEagerly: {}; interceptor: {}",
-                realHostUrl, retrofitClient.getUrlStatus(), globalEnable, CallAdapterFactoryString, ConverterFactoryString, callbackExecutorString, clientString, callFactoryString, validateEagerlyString, interceptor);
+        log.debug("|--BUILDER INFO: hostURL: {}; urlStatus: {}; globalEnable: {}; callAdapterFactory: {}; converterFactory:{}; callbackExecutor: {}; client: {}; callFactory: {}; validateEagerly: {}",
+        realHostUrl, retrofitClient.getUrlStatus(), globalEnable, CallAdapterFactoryString, ConverterFactoryString, callbackExecutorString, clientString, callFactoryString, validateEagerlyString);
+        for (RetrofitInterceptorBean interceptor : retrofitClient.getInterceptors()) {
+            log.debug("|--INTERCEPTOR INFO: handler: {}", interceptor.getHandler());
+            log.debug("   |--type: {}", interceptor.getType());
+            log.debug("   |--defaultScopeClasses: {}", StringUtils.join(interceptor.getDefaultScopeClasses(), ","));
+            log.debug("   |--include: {}", StringUtils.join(interceptor.getInclude(), ","));
+            log.debug("   |--exclude: {}", StringUtils.join(interceptor.getExclude(), ","));
+            log.debug("   |--sort: {}", interceptor.getSort());
+        }
 
+    }
+
+    private void retrofitApiInterfaceDebugLog(RetrofitApiInterfaceBean retrofitApiInterface, RetrofitClientBean retrofitClient) {
+        log.debug("   |--Retrofit Client Instance Name: {}", retrofitApiInterface.getRetrofitClientBeanInstanceName());
+        Map<Class<?>, Set<RetrofitInterceptorBean>> parentInterceptors = getParentInterceptors(retrofitApiInterface, retrofitClient);
+        for (Map.Entry<Class<?>, Set<RetrofitInterceptorBean>> entry : parentInterceptors.entrySet()) {
+            for (RetrofitInterceptorBean retrofitInterceptorBean : entry.getValue()) {
+                log.debug("   |--INTERCEPTOR INFO: handler: {} , belongsTo: {}", retrofitInterceptorBean.getHandler(), entry.getKey());
+                log.debug("      |--type: {}", retrofitInterceptorBean.getType());
+                log.debug("      |--defaultScopeClasses: {}", StringUtils.join(retrofitInterceptorBean.getDefaultScopeClasses(), ","));
+                log.debug("      |--include: {}", StringUtils.join(retrofitInterceptorBean.getInclude(), ","));
+                log.debug("      |--exclude: {}", StringUtils.join(retrofitInterceptorBean.getExclude(), ","));
+                log.debug("      |--sort: {}", retrofitInterceptorBean.getSort());
+            }
+        }
+    }
+
+    private Map<Class<?>, Set<RetrofitInterceptorBean>> getParentInterceptors(RetrofitApiInterfaceBean retrofitApiInterface, RetrofitClientBean retrofitClient) {
+        List<RetrofitApiInterfaceBean> retrofitApiInterfaceBeans = retrofitClient.getRetrofitApiInterfaceBeans();
+        LinkedHashSet<Class<?>> self2ParentClasses = retrofitApiInterface.getSelf2ParentClasses();
+        Map<Class<?>, Set<RetrofitInterceptorBean>> activeInterceptorMap = new HashMap<>();
+        for (Class<?> self2ParentClass : self2ParentClasses) {
+            RetrofitApiInterfaceBean apiInterfaceBean = retrofitApiInterfaceBeans.stream().filter(api -> api.getSelfClazz().equals(self2ParentClass)).findFirst().get();
+            activeInterceptorMap.put(self2ParentClass, apiInterfaceBean.getMyInterceptors());
+        }
+        return activeInterceptorMap;
     }
 }
