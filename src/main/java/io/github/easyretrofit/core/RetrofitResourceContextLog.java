@@ -51,16 +51,13 @@ public class RetrofitResourceContextLog {
                 }
                 final String self2ParentClasses = StringUtils.join(retrofitApiInterface.getSelf2ParentClasses(), "->");
                 final String childrenClasses = StringUtils.join(retrofitApiInterface.getChildrenClasses(), ",");
-
                 log.info("");
                 log.info("|--API INTERFACE INFO: name: {} , rootName: {}, self2RootPath: {}, childrenName: {}", selfClazz.getName(), parentClazzName, self2ParentClasses, childrenClasses);
                 retrofitApiInterfaceDebugLog(retrofitApiInterface, retrofitClient);
-                log.info("");
             }
-            index++;
             log.info("==========================RETROFIT CLIENT INFO [{}] END==========================", index);
-
             log.info("");
+            index++;
         }
     }
 
