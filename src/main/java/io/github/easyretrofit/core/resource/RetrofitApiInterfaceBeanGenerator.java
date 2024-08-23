@@ -55,7 +55,7 @@ public class RetrofitApiInterfaceBeanGenerator implements Generator<RetrofitApiI
         RetrofitBuilderBean retrofitBuilderBean = new RetrofitBuilderBean(bean.getAncestor(), globalRetrofitBuilderExtension);
         RetrofitUrl retrofitUrl = getRetrofitUrl(retrofitBuilderBean);
         retrofitApiInterfaceBean.setRetrofitUrl(retrofitUrl);
-        retrofitBuilderBean.setBaseUrl(retrofitUrl.getInputDefaultBaseUrl());
+        retrofitBuilderBean.setBaseUrl(retrofitUrl.getDefaultUrl().getRealHostUrl());
         retrofitApiInterfaceBean.setRetrofitBuilder(retrofitBuilderBean);
         return retrofitApiInterfaceBean;
     }
