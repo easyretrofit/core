@@ -106,12 +106,35 @@ public abstract class BaseInterceptor implements Interceptor {
         this.defaultScopeClasses = defaultScopeClasses;
     }
 
+    /**
+     * Obtain the class name of the class where the method is located through the method
+     * @param method current request method
+     * @return class name
+     */
     protected String getClazzNameByMethod(Method method) {
         return method.getDeclaringClass().getName();
     }
 
+    /**
+     * Obtain the method of the request location through the request
+     * @param request current request
+     * @return Method of the request
+     */
     protected Method getRequestMethod(Request request) {
         return Objects.requireNonNull(request.tag(Invocation.class)).method();
+    }
+
+    /**
+     * merged Injected RetrofitResourceContext and default RetrofitResourceContext<br>
+     * when the interceptor does not use DI, return default RetrofitResourceContext
+     * @return
+     */
+    protected RetrofitResourceContext getMergedRetrofitResourceContext() {
+        RetrofitResourceContext extensionContext = getInjectedRetrofitResourceContext();
+        if (context == null && extensionContext != null) {
+            return extensionContext;
+        }
+        return context;
     }
 
     protected Annotation getExtensionAnnotation(Class<? extends Annotation> annotationClazz) {
@@ -139,19 +162,6 @@ public abstract class BaseInterceptor implements Interceptor {
             }
         }
         return false;
-    }
-
-    /**
-     * merged Injected RetrofitResourceContext and default RetrofitResourceContext<br>
-     * when the interceptor does not use DI, return default RetrofitResourceContext
-     * @return
-     */
-    private RetrofitResourceContext getMergedRetrofitResourceContext() {
-        RetrofitResourceContext extensionContext = getInjectedRetrofitResourceContext();
-        if (context == null && extensionContext != null) {
-            return extensionContext;
-        }
-        return context;
     }
 
 }
