@@ -37,4 +37,9 @@ public class DynamicBaseUrlInterceptor extends BaseInterceptor {
         }
         return chain.proceed(request);
     }
+
+    @Override
+    protected RetrofitResourceContext getInjectedRetrofitResourceContext() {
+        return null;
+    }
 }

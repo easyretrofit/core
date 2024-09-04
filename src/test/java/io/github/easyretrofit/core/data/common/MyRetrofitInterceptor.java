@@ -1,5 +1,6 @@
 package io.github.easyretrofit.core.data.common;
 
+import io.github.easyretrofit.core.RetrofitResourceContext;
 import io.github.easyretrofit.core.extension.BaseInterceptor;
 import io.github.easyretrofit.core.resource.RetrofitApiInterfaceBean;
 import okhttp3.Request;
@@ -22,5 +23,10 @@ public class MyRetrofitInterceptor extends BaseInterceptor {
         final RetrofitApiInterfaceBean currentServiceBean = context.getRetrofitApiInterfaceBean(clazzName);
         // TODO if you need
         return chain.proceed(request);
+    }
+
+    @Override
+    protected RetrofitResourceContext getInjectedRetrofitResourceContext() {
+        return null;
     }
 }

@@ -50,6 +50,11 @@ public class UrlOverWriteInterceptor extends BaseInterceptor {
         return chain.proceed(request);
     }
 
+    @Override
+    protected RetrofitResourceContext getInjectedRetrofitResourceContext() {
+        return null;
+    }
+
     private HttpUrl.Builder setNonSlashEndpoint(Request request, Method method) {
         String clazzName = super.getClazzNameByMethod(method);
         final RetrofitApiInterfaceBean currentServiceBean = super.context.getRetrofitApiInterfaceBean(clazzName);

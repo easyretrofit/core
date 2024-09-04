@@ -61,6 +61,14 @@ public abstract class BaseInterceptor implements Interceptor {
      */
     protected abstract Response executeIntercept(Chain chain) throws IOException;
 
+    /**
+     * get RetrofitResourceContext when interceptor using DI inject RetrofitResourceContext Object<br>
+     * if the interceptor does not use DI, return null<br>
+     *
+     * @return RetrofitResourceContext injected through DI
+     */
+    protected abstract RetrofitResourceContext getInjectedRetrofitResourceContext();
+
     private boolean functionInDefaultScope(String className) {
         if (defaultScopeClasses == null) {
             return true;
@@ -112,7 +120,7 @@ public abstract class BaseInterceptor implements Interceptor {
             Request request = chain.request();
             final Method method = this.getRequestMethod(request);
             String clazzName = this.getClazzNameByMethod(method);
-            final RetrofitApiInterfaceBean currentServiceBean = context.getRetrofitApiInterfaceBean(clazzName);
+            final RetrofitApiInterfaceBean currentServiceBean = getMergedRetrofitResourceContext().getRetrofitApiInterfaceBean(clazzName);
             for (Class<?> parentClass : currentServiceBean.getSelf2ParentClasses()) {
                 annotation = parentClass.getAnnotation(annotationClazz);
                 if (annotation != null && self2ParentHasAnnotation(currentServiceBean.getSelf2ParentClasses(), annotationClazz))
@@ -124,13 +132,26 @@ public abstract class BaseInterceptor implements Interceptor {
 
     private boolean self2ParentHasAnnotation(LinkedHashSet<Class<?>> self2ParentClasses, Class<? extends Annotation> annotationClazz) {
         for (Class<?> clazz : self2ParentClasses) {
-            RetrofitApiInterfaceBean retrofitApiInterfaceBean = context.getRetrofitApiInterfaceBean(clazz);
+            RetrofitApiInterfaceBean retrofitApiInterfaceBean = getMergedRetrofitResourceContext().getRetrofitApiInterfaceBean(clazz);
             Annotation annotationResource = retrofitApiInterfaceBean.getAnnotationResource(annotationClazz);
             if (annotationResource != null && annotationResource.annotationType().equals(annotationClazz)) {
                 return true;
             }
         }
         return false;
+    }
+
+    /**
+     * merged Injected RetrofitResourceContext and default RetrofitResourceContext<br>
+     * when the interceptor does not use DI, return default RetrofitResourceContext
+     * @return
+     */
+    private RetrofitResourceContext getMergedRetrofitResourceContext() {
+        RetrofitResourceContext extensionContext = getInjectedRetrofitResourceContext();
+        if (context == null && extensionContext != null) {
+            return extensionContext;
+        }
+        return context;
     }
 
 }
