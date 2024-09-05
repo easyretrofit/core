@@ -35,7 +35,7 @@ public class PropertiesFileUtils {
         }
     }
 
-    public static String getExtensionPackageName(String classname) {
+    private static String getExtensionPackageName(String classname) {
         int lastDotIndex = classname.lastIndexOf('.');
         return classname.substring(0, lastDotIndex);
     }
