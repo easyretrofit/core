@@ -33,4 +33,24 @@ public class StringUtils {
     public static String[] toStringArray(@Nullable Collection<String> collection) {
         return (!CollectionUtils.isEmpty(collection) ? collection.toArray(EMPTY_STRING_ARRAY) : EMPTY_STRING_ARRAY);
     }
+
+    public static boolean startsWithPrefix(String input, String prefix) {
+        if (input == null || prefix == null) {
+            return false;
+        }
+        int prefixLength = prefix.length();
+        if (input.length() < prefixLength) {
+            return false;
+        }
+        String lowerInput = input.substring(0, prefixLength).toLowerCase();
+        String lowerPrefix = prefix.toLowerCase();
+        return lowerInput.equals(lowerPrefix);
+    }
+
+    public static boolean contains(String input, String searchStr) {
+        if (input == null || searchStr == null) {
+            return false;
+        }
+        return input.toLowerCase().contains(searchStr.toLowerCase());
+    }
 }

@@ -82,17 +82,17 @@ public class RetrofitResourceContextLog {
         params.add(pkgInfo.getSpecificationVersion());
         //add easy-retrofit info
         sb.append(LOG_INFO);
-        params.add(pkgInfo.getImplementationTitle());
+        params.add(appendEasyRetrofit(pkgInfo.getImplementationTitle()));
         params.add(pkgInfo.getImplementationVersion());
         if (logBean.getTitle() != null && logBean.getVersion() != null) {
             sb.append(LOG_INFO);
-            params.add(logBean.getTitle() == null ? "" : logBean.getTitle());
+            params.add(logBean.getTitle() == null ? "" : appendEasyRetrofit(logBean.getTitle()));
             params.add(logBean.getVersion() == null ? "" : logBean.getVersion());
 
             Class<?> builderExtensionClazz = context.getRetrofitBuilderExtensionClazz();
             if (builderExtensionClazz.getPackage().getImplementationTitle() != null && !params.stream().anyMatch(s -> s.equals(logBean.getTitle()))) {
                 sb.append(LOG_INFO);
-                params.add(builderExtensionClazz.getPackage().getImplementationTitle());
+                params.add(appendEasyRetrofit(builderExtensionClazz.getPackage().getImplementationTitle()));
                 params.add(builderExtensionClazz.getPackage().getImplementationVersion());
             }
             List<Class<?>> interceptorExtensionsClasses = context.getInterceptorExtensionsClasses();
@@ -101,7 +101,7 @@ public class RetrofitResourceContextLog {
                     continue;
                 }
                 sb.append(LOG_INFO);
-                params.add(interceptorExtensionsClass.getPackage().getImplementationTitle());
+                params.add(appendEasyRetrofit(interceptorExtensionsClass.getPackage().getImplementationTitle()));
                 params.add(interceptorExtensionsClass.getPackage().getImplementationVersion());
             }
         }
@@ -120,7 +120,7 @@ public class RetrofitResourceContextLog {
         String callFactoryString = retrofitBuilder.getCallFactory().getSimpleName();
         String validateEagerlyString = retrofitBuilder.isValidateEagerly() ? "true" : "false";
         log.debug("|--BUILDER INFO: hostURL: {}; urlStatus: {}; globalEnable: {}; callAdapterFactory: {}; converterFactory:{}; callbackExecutor: {}; client: {}; callFactory: {}; validateEagerly: {}",
-        realHostUrl, retrofitClient.getUrlStatus(), globalEnable, CallAdapterFactoryString, ConverterFactoryString, callbackExecutorString, clientString, callFactoryString, validateEagerlyString);
+                realHostUrl, retrofitClient.getUrlStatus(), globalEnable, CallAdapterFactoryString, ConverterFactoryString, callbackExecutorString, clientString, callFactoryString, validateEagerlyString);
         for (RetrofitInterceptorBean interceptor : retrofitClient.getInterceptors()) {
             log.debug("|--INTERCEPTOR INFO: handler: {}", interceptor.getHandler());
             log.debug("   |--type: {}", interceptor.getType());
@@ -159,5 +159,16 @@ public class RetrofitResourceContextLog {
             activeInterceptorMap.put(self2ParentClass, apiInterfaceBean.getMyInterceptors());
         }
         return activeInterceptorMap;
+    }
+
+    private String appendEasyRetrofit(String title) {
+        String searchStr = "easy-retrofit";
+        if (title != null) {
+            return searchStr + " :: " + title;
+        }
+//        if (title != null && !io.github.easyretrofit.core.util.StringUtils.contains(title, searchStr) && !io.github.easyretrofit.core.util.StringUtils.startsWithPrefix(title, searchStr)) {
+//            return searchStr + " :: " + title;
+//        }
+        return null;
     }
 }
