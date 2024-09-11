@@ -33,12 +33,19 @@ jobs:
         echo "Pull Request Title: $title"
         echo "pr_title=$title" >> $GITHUB_OUTPUT
 
+    - name: Install Go XML package
+      run: go get github.com/tidwall/gjson
+
     - name: Extract Version from POM
       id: extract-version
       run: |          # 从 pom.xml 文件中提取版本号
-        version=$(grep -oP '(?<=<version>)[^<]+' pom.xml | head -n 2)
-        echo "Version from POM: $version"
-        echo "pom_version=$version" >> $GITHUB_OUTPUT
+#        version=$(grep -oP '(?<=<version>)[^<]+' pom.xml | head -n 2)
+#        echo "Version from POM: $version"
+#        echo "pom_version=$version" >> $GITHUB_OUTPUT
+
+        version=$(go run ./extract_version.go)
+        echo "version=$version" >> $GITHUB_OUTPUT
+      shell: bash
 
     - name: Validate Pull Request Title
       run: |          # 读取 Pull Request 标题和版本号
