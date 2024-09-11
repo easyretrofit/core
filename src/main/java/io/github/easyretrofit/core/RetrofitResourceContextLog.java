@@ -78,7 +78,7 @@ public class RetrofitResourceContextLog {
         //add retrofit info
         sb.append(LOG_INFO);
         Package pkgInfo = this.getClass().getPackage();
-        params.add(appendEasyRetrofit(pkgInfo.getSpecificationTitle()));
+        params.add(pkgInfo.getSpecificationTitle());
         params.add(pkgInfo.getSpecificationVersion());
         //add easy-retrofit info
         sb.append(LOG_INFO);
@@ -163,9 +163,12 @@ public class RetrofitResourceContextLog {
 
     private String appendEasyRetrofit(String title) {
         String searchStr = "easy-retrofit";
-        if (title != null && !io.github.easyretrofit.core.util.StringUtils.contains(title, searchStr) && !io.github.easyretrofit.core.util.StringUtils.startsWithPrefix(title, searchStr)) {
-            return searchStr + "-" + title;
+        if (title != null) {
+            return searchStr + " :: " + title;
         }
-        return title;
+//        if (title != null && !io.github.easyretrofit.core.util.StringUtils.contains(title, searchStr) && !io.github.easyretrofit.core.util.StringUtils.startsWithPrefix(title, searchStr)) {
+//            return searchStr + " :: " + title;
+//        }
+        return null;
     }
 }
