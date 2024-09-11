@@ -36,7 +36,7 @@ jobs:
     - name: Extract Version from POM
       id: extract-version
       run: |          # 从 pom.xml 文件中提取版本号
-        version=$(grep -oP '(?<=<version>)[^<]+' pom.xml | head -n 1)
+        version=$(grep -oP '(?<=<version>)[^<]+' pom.xml | head -n 2)
         echo "Version from POM: $version"
         echo "pom_version=$version" >> $GITHUB_OUTPUT
 
@@ -50,6 +50,7 @@ jobs:
         # 验证 Pull Request 标题
         if [[ "$title" =~ ^release-$version$ ]]; then
           echo "Pull Request title is valid."
+          exit 1
         else
           echo "Pull Request title must be in the format 'release-$version'."
           exit 1
