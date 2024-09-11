@@ -45,7 +45,7 @@ jobs:
 
         version=$(go run ./extract_version.go)
         echo "version=$version" >> $GITHUB_OUTPUT
-      shell: bash
+        shell: bash
 
     - name: Validate Pull Request Title
       run: |          # 读取 Pull Request 标题和版本号
