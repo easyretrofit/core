@@ -15,6 +15,14 @@
     <version>1.0.0</version>
     <packaging>jar</packaging>
 
+    <url>https://github.com/easyretrofit/${project.artifactId}</url>
+
+    <scm>
+        <url>https://github.com/easyretrofit/${project.artifactId}</url>
+        <connection>scm:git:git://github.com/easyretrofit/${project.artifactId}.git</connection>
+        <developerConnection>scm:git:ssh://github.com/easyretrofit/${project.artifactId}.git</developerConnection>
+    </scm>
+
     <properties>
         <reflections.version>0.10.2</reflections.version>
         <commons.lang3.version>3.14.0</commons.lang3.version>
