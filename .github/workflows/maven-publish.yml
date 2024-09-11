@@ -44,7 +44,8 @@ jobs:
       run: |          # 读取 Pull Request 标题和版本号
         title="${{ steps.pr-title.outputs.pr_title }}"
         version="${{ steps.extract-version.outputs.pom_version }}"
-        
+        echo title
+        echo version
         
         # 验证 Pull Request 标题
         if [[ "$title" =~ ^release-$version$ ]]; then
