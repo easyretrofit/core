@@ -12,7 +12,7 @@
     <modelVersion>4.0.0</modelVersion>
     <description>The function of core is to generate retrofit instances based on the DI framework and manage retrofit resource context</description>
     <artifactId>core</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <packaging>jar</packaging>
 
     <url>https://github.com/easyretrofit/${project.artifactId}</url>
