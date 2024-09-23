@@ -12,7 +12,9 @@ import retrofit2.Invocation;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -20,7 +22,7 @@ import java.util.Objects;
  *
  * @author liuziyuan
  */
-public abstract class BaseInterceptor implements Interceptor {
+public abstract class BaseInterceptor implements Interceptor, Cloneable {
 
     protected RetrofitResourceContext context;
     private Class<?>[] defaultScopeClasses;
@@ -108,6 +110,7 @@ public abstract class BaseInterceptor implements Interceptor {
 
     /**
      * Obtain the class name of the class where the method is located through the method
+     *
      * @param method current request method
      * @return class name
      */
@@ -115,8 +118,13 @@ public abstract class BaseInterceptor implements Interceptor {
         return method.getDeclaringClass().getName();
     }
 
+    protected Class<?> getClassByMethod(Method method) {
+        return method.getDeclaringClass();
+    }
+
     /**
      * Obtain the method of the request location through the request
+     *
      * @param request current request
      * @return Method of the request
      */
@@ -127,6 +135,7 @@ public abstract class BaseInterceptor implements Interceptor {
     /**
      * merged Injected RetrofitResourceContext and default RetrofitResourceContext<br>
      * when the interceptor does not use DI, return default RetrofitResourceContext
+     *
      * @return
      */
     protected RetrofitResourceContext getMergedRetrofitResourceContext() {
@@ -135,6 +144,54 @@ public abstract class BaseInterceptor implements Interceptor {
             return extensionContext;
         }
         return context;
+    }
+
+    protected List<Annotation> getAnnotationFromMethod(Class<? extends Annotation> annotationClazz) {
+        List<Annotation> annotations = new ArrayList<>();
+        if (chain != null) {
+            Request request = chain.request();
+            final Method method = this.getRequestMethod(request);
+            Annotation[] declaredAnnotations = method.getDeclaredAnnotations();
+            for (Annotation declaredAnnotation : declaredAnnotations) {
+                if (declaredAnnotation.annotationType().equals(annotationClazz)) {
+                    annotations.add(declaredAnnotation);
+                }
+            }
+        }
+        return annotations;
+    }
+
+    protected List<Annotation> getAnnotationFromCurrentClass(Class<? extends Annotation> annotationClazz) {
+        List<Annotation> annotations = new ArrayList<>();
+        if (chain != null) {
+            Request request = chain.request();
+            final Method method = this.getRequestMethod(request);
+            Class<?> clazz = this.getClassByMethod(method);
+            Annotation[] declaredAnnotations = clazz.getDeclaredAnnotations();
+            for (Annotation declaredAnnotation : declaredAnnotations) {
+                if (declaredAnnotation.annotationType().equals(annotationClazz)) {
+                    annotations.add(declaredAnnotation);
+                }
+            }
+        }
+        return annotations;
+    }
+
+    protected List<Annotation> getAnnotationFromParentClass(Class<? extends Annotation> annotationClazz) {
+        List<Annotation> annotations = new ArrayList<>();
+        if (chain != null) {
+            Request request = chain.request();
+            final Method method = this.getRequestMethod(request);
+            Class<?> clazz = this.getClassByMethod(method);
+            final RetrofitApiInterfaceBean currentServiceBean = getMergedRetrofitResourceContext().getRetrofitApiInterfaceBean(clazz.getName());
+            for (Class<?> parentClass : currentServiceBean.getSelf2ParentClasses()) {
+                Annotation annotation = parentClass.getAnnotation(annotationClazz);
+                if (annotation != null && self2ParentHasAnnotation(currentServiceBean.getSelf2ParentClasses(), annotationClazz)) {
+                    annotations.add(annotation);
+                }
+            }
+        }
+        return annotations;
     }
 
     protected Annotation getExtensionAnnotation(Class<? extends Annotation> annotationClazz) {
@@ -164,4 +221,13 @@ public abstract class BaseInterceptor implements Interceptor {
         return false;
     }
 
+    @Override
+    public BaseInterceptor clone() {
+        try {
+            // TODO: copy mutable state here, so the clone can't change the internals of the original
+            return (BaseInterceptor) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
+    }
 }
