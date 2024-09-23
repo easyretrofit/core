@@ -18,20 +18,19 @@ public abstract class OkHttpInterceptorGenerator implements Generator<Intercepto
     private final Class<? extends BaseInterceptor> interceptorClass;
     private final RetrofitInterceptorBean retrofitInterceptor;
     private final RetrofitResourceContext resourceContext;
-    private BaseInterceptor interceptor;
 
     public OkHttpInterceptorGenerator(RetrofitInterceptorBean retrofitInterceptor, RetrofitResourceContext resourceContext) {
         this.retrofitInterceptor = retrofitInterceptor;
         this.interceptorClass = retrofitInterceptor.getHandler();
         this.resourceContext = resourceContext;
-        this.interceptor = null;
     }
 
     public abstract BaseInterceptor buildInjectionObject(Class<? extends BaseInterceptor> clazz);
 
     @Override
     public Interceptor generate() {
-        interceptor = buildInjectionObject(retrofitInterceptor.getHandler());
+        BaseInterceptor interceptor = buildInjectionObject(retrofitInterceptor.getHandler());
+        BaseInterceptor clonedInterceptor = interceptor.clone();
         if (interceptor == null && interceptorClass != null) {
             Constructor<? extends BaseInterceptor> constructor;
             BaseInterceptor interceptorInstance;
@@ -47,14 +46,14 @@ public abstract class OkHttpInterceptorGenerator implements Generator<Intercepto
             } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
                 throw new RuntimeException(e);
             }
-            interceptor = interceptorInstance;
+            clonedInterceptor = interceptorInstance;
         }
-        if (interceptor != null) {
-            interceptor.setInclude(retrofitInterceptor.getInclude());
-            interceptor.setExclude(retrofitInterceptor.getExclude());
-            interceptor.setDefaultScopeClasses(retrofitInterceptor.getDefaultScopeClasses());
+        if (clonedInterceptor != null) {
+            clonedInterceptor.setInclude(retrofitInterceptor.getInclude());
+            clonedInterceptor.setExclude(retrofitInterceptor.getExclude());
+            clonedInterceptor.setDefaultScopeClasses(retrofitInterceptor.getDefaultScopeClasses());
         }
-        return interceptor;
+        return clonedInterceptor;
 
     }
 }
