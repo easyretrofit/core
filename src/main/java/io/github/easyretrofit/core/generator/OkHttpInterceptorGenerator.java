@@ -30,7 +30,10 @@ public abstract class OkHttpInterceptorGenerator implements Generator<Intercepto
     @Override
     public Interceptor generate() {
         BaseInterceptor interceptor = buildInjectionObject(retrofitInterceptor.getHandler());
-        BaseInterceptor clonedInterceptor = interceptor.clone();
+        BaseInterceptor clonedInterceptor = null;
+        if (interceptor != null) {
+            clonedInterceptor = interceptor.clone();
+        }
         if (interceptor == null && interceptorClass != null) {
             Constructor<? extends BaseInterceptor> constructor;
             BaseInterceptor interceptorInstance;
