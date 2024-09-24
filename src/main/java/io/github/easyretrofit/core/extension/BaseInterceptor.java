@@ -151,12 +151,7 @@ public abstract class BaseInterceptor implements Interceptor, Cloneable {
         if (chain != null) {
             Request request = chain.request();
             final Method method = this.getRequestMethod(request);
-            Annotation[] declaredAnnotations = method.getDeclaredAnnotations();
-            for (Annotation declaredAnnotation : declaredAnnotations) {
-                if (declaredAnnotation.annotationType().equals(annotationClazz)) {
-                    annotations.add(declaredAnnotation);
-                }
-            }
+            annotations = InterceptorUtils.getAnnotationFromMethod(annotationClazz, method);
         }
         return annotations;
     }
@@ -165,14 +160,8 @@ public abstract class BaseInterceptor implements Interceptor, Cloneable {
         List<Annotation> annotations = new ArrayList<>();
         if (chain != null) {
             Request request = chain.request();
-            final Method method = this.getRequestMethod(request);
-            Class<?> clazz = this.getClassByMethod(method);
-            Annotation[] declaredAnnotations = clazz.getDeclaredAnnotations();
-            for (Annotation declaredAnnotation : declaredAnnotations) {
-                if (declaredAnnotation.annotationType().equals(annotationClazz)) {
-                    annotations.add(declaredAnnotation);
-                }
-            }
+            Class<?> clazz = InterceptorUtils.getClassByRequest(request);
+            annotations = InterceptorUtils.getAnnotationFromCurrentClass(annotationClazz, clazz);
         }
         return annotations;
     }
@@ -181,15 +170,9 @@ public abstract class BaseInterceptor implements Interceptor, Cloneable {
         List<Annotation> annotations = new ArrayList<>();
         if (chain != null) {
             Request request = chain.request();
-            final Method method = this.getRequestMethod(request);
-            Class<?> clazz = this.getClassByMethod(method);
+            Class<?> clazz = InterceptorUtils.getClassByRequest(request);
             final RetrofitApiInterfaceBean currentServiceBean = getMergedRetrofitResourceContext().getRetrofitApiInterfaceBean(clazz.getName());
-            for (Class<?> parentClass : currentServiceBean.getSelf2ParentClasses()) {
-                Annotation annotation = parentClass.getAnnotation(annotationClazz);
-                if (annotation != null && self2ParentHasAnnotation(currentServiceBean.getSelf2ParentClasses(), annotationClazz)) {
-                    annotations.add(annotation);
-                }
-            }
+            annotations = InterceptorUtils.getAnnotationFromParentClass(annotationClazz, currentServiceBean);
         }
         return annotations;
     }
@@ -201,24 +184,9 @@ public abstract class BaseInterceptor implements Interceptor, Cloneable {
             final Method method = this.getRequestMethod(request);
             String clazzName = this.getClazzNameByMethod(method);
             final RetrofitApiInterfaceBean currentServiceBean = getMergedRetrofitResourceContext().getRetrofitApiInterfaceBean(clazzName);
-            for (Class<?> parentClass : currentServiceBean.getSelf2ParentClasses()) {
-                annotation = parentClass.getAnnotation(annotationClazz);
-                if (annotation != null && self2ParentHasAnnotation(currentServiceBean.getSelf2ParentClasses(), annotationClazz))
-                    return annotation;
-            }
+            annotation = InterceptorUtils.getExtensionAnnotation(annotationClazz, currentServiceBean);
         }
         return annotation;
-    }
-
-    private boolean self2ParentHasAnnotation(LinkedHashSet<Class<?>> self2ParentClasses, Class<? extends Annotation> annotationClazz) {
-        for (Class<?> clazz : self2ParentClasses) {
-            RetrofitApiInterfaceBean retrofitApiInterfaceBean = getMergedRetrofitResourceContext().getRetrofitApiInterfaceBean(clazz);
-            Annotation annotationResource = retrofitApiInterfaceBean.getAnnotationResource(annotationClazz);
-            if (annotationResource != null && annotationResource.annotationType().equals(annotationClazz)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     @Override
