@@ -106,4 +106,13 @@ jobs:
             echo "Pull Request title must be in the format 'release-$version'."
             echo "release_name_check=false" >> $GITHUB_OUTPUT
           fi
-          
+
+      - name: exit
+        id: exit
+        run: |
+          if [ "${{ steps.check.outputs.release_name_check }}" == "false" ]; then
+            echo "::error::Release name check failed."
+            exit 1
+          else
+            echo "Release name check passed."
+          fi
