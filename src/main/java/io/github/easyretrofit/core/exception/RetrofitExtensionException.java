@@ -6,6 +6,7 @@ import okhttp3.Request;
 
 /**
  * Easy Retrofit Extension Exception, when extension exception occurred, it needs throw this exception.
+ *
  * @author liuziyuan
  */
 public class RetrofitExtensionException extends RuntimeException {
@@ -28,6 +29,12 @@ public class RetrofitExtensionException extends RuntimeException {
 
     public RetrofitExtensionException(Throwable cause, RetrofitApiInterfaceBean retrofitApiInterfaceBean, Request request) {
         super(cause);
+        this.retrofitApiInterfaceBean = retrofitApiInterfaceBean;
+        this.request = request;
+    }
+
+    public RetrofitExtensionException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace, RetrofitApiInterfaceBean retrofitApiInterfaceBean, Request request) {
+        super(message, cause, enableSuppression, writableStackTrace);
         this.retrofitApiInterfaceBean = retrofitApiInterfaceBean;
         this.request = request;
     }

@@ -1,7 +1,7 @@
 package io.github.easyretrofit.core.resource;
 
 import io.github.easyretrofit.core.exception.RetrofitExtensionException;
-import io.github.easyretrofit.core.proxy.BaseExceptionDelegate;
+import io.github.easyretrofit.core.delegate.BaseExceptionDelegate;
 import io.github.easyretrofit.core.util.UniqueKeyUtils;
 
 import java.lang.annotation.Annotation;

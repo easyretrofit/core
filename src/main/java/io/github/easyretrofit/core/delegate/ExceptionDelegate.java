@@ -1,4 +1,4 @@
-package io.github.easyretrofit.core.proxy;
+package io.github.easyretrofit.core.delegate;
 
 import io.github.easyretrofit.core.exception.RetrofitExtensionException;
 
