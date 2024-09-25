@@ -1,7 +1,7 @@
 package io.github.easyretrofit.core.proxy;
 
 import io.github.easyretrofit.core.delegate.BaseExceptionDelegate;
-import io.github.easyretrofit.core.delegate.ProxyExceptionHandler;
+import io.github.easyretrofit.core.delegate.JdkProxyExceptionHandler;
 import io.github.easyretrofit.core.exception.RetrofitExtensionException;
 
 import java.lang.reflect.InvocationHandler;
@@ -29,8 +29,8 @@ public class RetrofitApiInterfaceInvocationHandler<T> implements InvocationHandl
         try {
             return method.invoke(t, args);
         } catch (Exception e) {
-            ProxyExceptionHandler proxyExceptionHandler = new ProxyExceptionHandler(exceptionDelegates);
-            return proxyExceptionHandler.handle(proxy, method, args, e);
+            JdkProxyExceptionHandler jdkProxyExceptionHandler = new JdkProxyExceptionHandler(exceptionDelegates);
+            return jdkProxyExceptionHandler.handle(proxy, method, args, e);
         }
     }
 

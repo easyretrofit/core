@@ -5,11 +5,11 @@ import io.github.easyretrofit.core.exception.RetrofitExtensionException;
 import java.lang.reflect.Method;
 import java.util.Set;
 
-public class ProxyExceptionHandler {
+public class JdkProxyExceptionHandler {
 
     private final Set<BaseExceptionDelegate<? extends RetrofitExtensionException>> exceptionDelegates;
 
-    public ProxyExceptionHandler(Set<BaseExceptionDelegate<? extends RetrofitExtensionException>> exceptionDelegates) {
+    public JdkProxyExceptionHandler(Set<BaseExceptionDelegate<? extends RetrofitExtensionException>> exceptionDelegates) {
         this.exceptionDelegates = exceptionDelegates;
     }
 

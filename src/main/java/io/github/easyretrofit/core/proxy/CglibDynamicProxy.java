@@ -5,8 +5,7 @@ import net.sf.cglib.proxy.MethodInterceptor;
 
 public class CglibDynamicProxy {
 
-    public static <T> T create(ClassLoader loader,
-                               Class<?> clazz,
+    public static <T> T create(Class<?> clazz,
                                MethodInterceptor invocationHandler) {
         Enhancer enhancer = new Enhancer();
         enhancer.setSuperclass(clazz);
