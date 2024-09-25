@@ -37,7 +37,7 @@ public class InterceptorUtils {
      * @param request current request
      * @return Method of the request
      */
-    protected static Method getRequestMethod(Request request) {
+    public static Method getRequestMethod(Request request) {
         return Objects.requireNonNull(request.tag(Invocation.class)).method();
     }
 

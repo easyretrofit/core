@@ -1,7 +1,6 @@
 package io.github.easyretrofit.core.proxy;
 
 import io.github.easyretrofit.core.delegate.BaseExceptionDelegate;
-import io.github.easyretrofit.core.delegate.ExceptionDelegator;
 import io.github.easyretrofit.core.delegate.ProxyExceptionHandler;
 import io.github.easyretrofit.core.exception.RetrofitExtensionException;
 
@@ -14,13 +13,13 @@ import java.util.Set;
  *
  * @author liuziyuan
  */
-public class RetrofitServiceProxy<T> implements InvocationHandler {
+public class RetrofitApiInterfaceInvocationHandler<T> implements InvocationHandler {
 
     private final T t;
 
     private final Set<BaseExceptionDelegate<? extends RetrofitExtensionException>> exceptionDelegates;
 
-    public RetrofitServiceProxy(T t, Set<BaseExceptionDelegate<? extends RetrofitExtensionException>> exceptionDelegates) {
+    public RetrofitApiInterfaceInvocationHandler(T t, Set<BaseExceptionDelegate<? extends RetrofitExtensionException>> exceptionDelegates) {
         this.t = t;
         this.exceptionDelegates = exceptionDelegates;
     }
