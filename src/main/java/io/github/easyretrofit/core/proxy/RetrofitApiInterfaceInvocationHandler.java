@@ -1,12 +1,9 @@
 package io.github.easyretrofit.core.proxy;
 
-import io.github.easyretrofit.core.delegate.BaseExceptionDelegate;
 import io.github.easyretrofit.core.delegate.JdkProxyExceptionHandler;
-import io.github.easyretrofit.core.exception.RetrofitExtensionException;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import java.util.Set;
 
 /**
  * The dynamic proxy of RetrofitService
@@ -17,11 +14,11 @@ public class RetrofitApiInterfaceInvocationHandler<T> implements InvocationHandl
 
     private final T t;
 
-    private final Set<BaseExceptionDelegate<? extends RetrofitExtensionException>> exceptionDelegates;
+    private final Object fallBackBean;
 
-    public RetrofitApiInterfaceInvocationHandler(T t, Set<BaseExceptionDelegate<? extends RetrofitExtensionException>> exceptionDelegates) {
+    public RetrofitApiInterfaceInvocationHandler(T t, Object fallBackBean) {
         this.t = t;
-        this.exceptionDelegates = exceptionDelegates;
+        this.fallBackBean = fallBackBean;
     }
 
     @Override
@@ -29,7 +26,7 @@ public class RetrofitApiInterfaceInvocationHandler<T> implements InvocationHandl
         try {
             return method.invoke(t, args);
         } catch (Exception e) {
-            JdkProxyExceptionHandler jdkProxyExceptionHandler = new JdkProxyExceptionHandler(exceptionDelegates);
+            JdkProxyExceptionHandler jdkProxyExceptionHandler = new JdkProxyExceptionHandler(fallBackBean);
             return jdkProxyExceptionHandler.handle(proxy, method, args, e);
         }
     }

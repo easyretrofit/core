@@ -76,9 +76,9 @@ public class RetrofitApiInterfaceBeanGenerator implements Generator<RetrofitApiI
                     RetrofitInterceptorBean retrofitInterceptorBean = new RetrofitInterceptorBean(interceptorAnnotation, getDefaultScopeClasses(bean));
                     retrofitInterceptorBean = getInterceptorParamsAnnotation(interceptorExtension, apiClazz, interceptorAnnotation, retrofitInterceptorBean);
                     assert Objects.requireNonNull(retrofitInterceptorBean).getHandler() == interceptorExtension.createInterceptor();
-                    if (interceptorExtension.createExceptionDelegate() != null) {
-                        retrofitApiInterfaceBean.addExceptionDelegate(interceptorExtension.createExceptionDelegate());
-                    }
+//                    if (interceptorExtension.createExceptionDelegate() != null) {
+//                        retrofitApiInterfaceBean.addExceptionDelegate(interceptorExtension.createExceptionDelegate());
+//                    }
                     interceptors.add(retrofitInterceptorBean);
                 }
             }
