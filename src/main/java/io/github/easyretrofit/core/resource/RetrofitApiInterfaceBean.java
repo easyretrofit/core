@@ -25,6 +25,7 @@ public final class RetrofitApiInterfaceBean implements UniqueKey {
     private RetrofitBuilderBean retrofitBuilder;
     private Set<RetrofitInterceptorBean> myInterceptors;
     private Set<Class<? extends BaseExceptionDelegate<? extends RetrofitExtensionException>>> exceptionDelegates;
+    private Class<?> fallBackClazz;
 
     public RetrofitApiInterfaceBean() {
         childrenClasses = new LinkedHashSet<>();
@@ -104,6 +105,13 @@ public final class RetrofitApiInterfaceBean implements UniqueKey {
         return childrenClasses;
     }
 
+    public Class<?> getFallBackClazz() {
+        return fallBackClazz;
+    }
+
+    public void setFallBackClazz(Class<?> fallBackClazz) {
+        this.fallBackClazz = fallBackClazz;
+    }
     public void setChildrenClasses(Set<Class<?>> childrenClasses) {
         this.childrenClasses = childrenClasses;
     }
@@ -148,6 +156,7 @@ public final class RetrofitApiInterfaceBean implements UniqueKey {
                 ", retrofitBuilder=" + retrofitBuilder.getUniqueKey() +
                 ", myInterceptors=" + myInterceptorStr +
                 ", exceptionDelegates=" + exceptionDelegateStr +
+                ", fallBackClazz=" + fallBackClazz +
                 '}';
     }
 
