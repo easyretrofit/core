@@ -1,13 +1,10 @@
 package io.github.easyretrofit.core.resource;
 
-import io.github.easyretrofit.core.exception.RetrofitInterceptorException;
 //import io.github.easyretrofit.core.delegate.BaseExceptionDelegate;
 import io.github.easyretrofit.core.util.UniqueKeyUtils;
-import io.github.easyretrofit.core.util.UniqueKeyUtils;
 
-import java.lang.annotation.Annotation;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
+        import java.lang.annotation.Annotation;
+        import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 

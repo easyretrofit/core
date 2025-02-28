@@ -1,6 +1,5 @@
 package io.github.easyretrofit.core;
 
-import io.github.easyretrofit.core.exception.RetrofitInterceptorException;
 import io.github.easyretrofit.core.extension.BaseInterceptor;
 //import io.github.easyretrofit.core.delegate.BaseExceptionDelegate;
 

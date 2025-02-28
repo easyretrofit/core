@@ -11,25 +11,25 @@ import java.io.IOException;
  * 非常重要的的, Retrofit Interceptor 一定要抛出IOException 才不会出现Exception in thread "OkHttp Dispatcher"
  * @author liuziyuan
  */
-public class RetrofitInterceptorException extends IOException {
+public class RetrofitRuntimeException extends IOException {
 
     protected final RetrofitApiInterfaceBean retrofitApiInterfaceBean;
 
     protected final Request request;
 
-    public RetrofitInterceptorException(String message, RetrofitApiInterfaceBean retrofitApiInterfaceBean, Request request) {
+    public RetrofitRuntimeException(String message, RetrofitApiInterfaceBean retrofitApiInterfaceBean, Request request) {
         super(message);
         this.retrofitApiInterfaceBean = retrofitApiInterfaceBean;
         this.request = request;
     }
 
-    public RetrofitInterceptorException(String message, Throwable cause, RetrofitApiInterfaceBean retrofitApiInterfaceBean, Request request) {
+    public RetrofitRuntimeException(String message, Throwable cause, RetrofitApiInterfaceBean retrofitApiInterfaceBean, Request request) {
         super(message, cause);
         this.retrofitApiInterfaceBean = retrofitApiInterfaceBean;
         this.request = request;
     }
 
-    public RetrofitInterceptorException(Throwable cause, RetrofitApiInterfaceBean retrofitApiInterfaceBean, Request request) {
+    public RetrofitRuntimeException(Throwable cause, RetrofitApiInterfaceBean retrofitApiInterfaceBean, Request request) {
         super(cause);
         this.retrofitApiInterfaceBean = retrofitApiInterfaceBean;
         this.request = request;
