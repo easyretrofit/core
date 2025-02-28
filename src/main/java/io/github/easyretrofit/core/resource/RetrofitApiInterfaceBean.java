@@ -1,12 +1,10 @@
 package io.github.easyretrofit.core.resource;
 
-import io.github.easyretrofit.core.exception.RetrofitExtensionException;
-import io.github.easyretrofit.core.delegate.BaseExceptionDelegate;
+//import io.github.easyretrofit.core.delegate.BaseExceptionDelegate;
 import io.github.easyretrofit.core.util.UniqueKeyUtils;
 
-import java.lang.annotation.Annotation;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
+        import java.lang.annotation.Annotation;
+        import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -24,7 +22,8 @@ public final class RetrofitApiInterfaceBean implements UniqueKey {
     private RetrofitUrl retrofitUrl;
     private RetrofitBuilderBean retrofitBuilder;
     private Set<RetrofitInterceptorBean> myInterceptors;
-    private Set<Class<? extends BaseExceptionDelegate<? extends RetrofitExtensionException>>> exceptionDelegates;
+//    private Set<Class<? extends BaseExceptionDelegate<? extends RetrofitInterceptorException>>> exceptionDelegates;
+    private Class<?> fallBackClazz;
 
     public RetrofitApiInterfaceBean() {
         childrenClasses = new LinkedHashSet<>();
@@ -35,12 +34,12 @@ public final class RetrofitApiInterfaceBean implements UniqueKey {
         this.retrofitBuilder = retrofitClientBean.getRetrofitBuilder();
     }
 
-    public void addExceptionDelegate(Class<? extends BaseExceptionDelegate<? extends RetrofitExtensionException>> clazz) {
-        if (exceptionDelegates == null) {
-            exceptionDelegates = new HashSet<>();
-        }
-        exceptionDelegates.add(clazz);
-    }
+//    public void addExceptionDelegate(Class<? extends BaseExceptionDelegate<? extends RetrofitInterceptorException>> clazz) {
+//        if (exceptionDelegates == null) {
+//            exceptionDelegates = new HashSet<>();
+//        }
+//        exceptionDelegates.add(clazz);
+//    }
 
     public <T extends Annotation> T getAnnotationResource(Class<? extends Annotation> clazz) {
         Class<?> selfClazz = this.getSelfClazz();
@@ -104,6 +103,13 @@ public final class RetrofitApiInterfaceBean implements UniqueKey {
         return childrenClasses;
     }
 
+    public Class<?> getFallBackClazz() {
+        return fallBackClazz;
+    }
+
+    public void setFallBackClazz(Class<?> fallBackClazz) {
+        this.fallBackClazz = fallBackClazz;
+    }
     public void setChildrenClasses(Set<Class<?>> childrenClasses) {
         this.childrenClasses = childrenClasses;
     }
@@ -127,9 +133,9 @@ public final class RetrofitApiInterfaceBean implements UniqueKey {
         return retrofitClientBeanInstanceName;
     }
 
-    public Set<Class<? extends BaseExceptionDelegate<? extends RetrofitExtensionException>>> getExceptionDelegates() {
-        return exceptionDelegates;
-    }
+//    public Set<Class<? extends BaseExceptionDelegate<? extends RetrofitInterceptorException>>> getExceptionDelegates() {
+//        return exceptionDelegates;
+//    }
 
     @Override
     public String toString() {
@@ -137,17 +143,18 @@ public final class RetrofitApiInterfaceBean implements UniqueKey {
         if (myInterceptors != null) {
             myInterceptorStr = myInterceptors.stream().map(RetrofitInterceptorBean::toString).collect(Collectors.toSet()).toString();
         }
-        String exceptionDelegateStr = null;
-        if (exceptionDelegates != null) {
-            exceptionDelegateStr = exceptionDelegates.stream().map(Class::getName).collect(Collectors.toSet()).toString();
-        }
+//        String exceptionDelegateStr = null;
+//        if (exceptionDelegates != null) {
+//            exceptionDelegateStr = exceptionDelegates.stream().map(Class::getName).collect(Collectors.toSet()).toString();
+//        }
         return "RetrofitApiServiceBean{" +
                 "selfClazz=" + selfClazz +
                 ", parentClazz=" + parentClazz +
                 ", retrofitUrl=" + retrofitUrl.getUniqueKey() +
                 ", retrofitBuilder=" + retrofitBuilder.getUniqueKey() +
                 ", myInterceptors=" + myInterceptorStr +
-                ", exceptionDelegates=" + exceptionDelegateStr +
+//                ", exceptionDelegates=" + exceptionDelegateStr +
+                ", fallBackClazz=" + fallBackClazz +
                 '}';
     }
 

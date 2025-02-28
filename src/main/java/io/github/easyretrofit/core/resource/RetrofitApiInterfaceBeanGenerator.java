@@ -43,6 +43,13 @@ public class RetrofitApiInterfaceBeanGenerator implements Generator<RetrofitApiI
         retrofitApiInterfaceBean.setParentClazz(bean.getAncestor());
         retrofitApiInterfaceBean.setSelf2ParentClasses(bean.getSelf2Ancestors());
         retrofitApiInterfaceBean.setChildrenClasses(bean.getChildren());
+        if (bean.getMyself().getAnnotation(RetrofitFallBack.class) != null) {
+            retrofitApiInterfaceBean.setFallBackClazz(bean.getMyself().getDeclaredAnnotation(RetrofitFallBack.class).value());
+        } else if (bean.getMyself().getAnnotation(RetrofitFallBack.class) == null && bean.getAncestor().getAnnotation(RetrofitFallBack.class) != null) {
+            retrofitApiInterfaceBean.setFallBackClazz(bean.getAncestor().getDeclaredAnnotation(RetrofitFallBack.class).value());
+        } else {
+            retrofitApiInterfaceBean.setFallBackClazz(null);
+        }
         // set interceptor
         Set<RetrofitInterceptorBean> myInterceptors = getInterceptors(bean);
         if (interceptorExtensions != null) {
@@ -69,9 +76,9 @@ public class RetrofitApiInterfaceBeanGenerator implements Generator<RetrofitApiI
                     RetrofitInterceptorBean retrofitInterceptorBean = new RetrofitInterceptorBean(interceptorAnnotation, getDefaultScopeClasses(bean));
                     retrofitInterceptorBean = getInterceptorParamsAnnotation(interceptorExtension, apiClazz, interceptorAnnotation, retrofitInterceptorBean);
                     assert Objects.requireNonNull(retrofitInterceptorBean).getHandler() == interceptorExtension.createInterceptor();
-                    if (interceptorExtension.createExceptionDelegate() != null) {
-                        retrofitApiInterfaceBean.addExceptionDelegate(interceptorExtension.createExceptionDelegate());
-                    }
+//                    if (interceptorExtension.createExceptionDelegate() != null) {
+//                        retrofitApiInterfaceBean.addExceptionDelegate(interceptorExtension.createExceptionDelegate());
+//                    }
                     interceptors.add(retrofitInterceptorBean);
                 }
             }

@@ -2,6 +2,7 @@ package io.github.easyretrofit.core.resource;
 
 import io.github.easyretrofit.core.annotation.RetrofitBase;
 import io.github.easyretrofit.core.annotation.RetrofitBuilder;
+import io.github.easyretrofit.core.annotation.RetrofitFallBack;
 import io.github.easyretrofit.core.exception.RetrofitBaseException;
 
 import java.util.*;
@@ -25,6 +26,7 @@ public class PreRetrofitResourceApiInterfaceClassBean {
             this.self2Ancestors.add(this.myself);
             this.children.add(this.myself);
         }
+
     }
 
     public LinkedHashSet<Class<?>> getSelf2Ancestors() {
@@ -42,6 +44,7 @@ public class PreRetrofitResourceApiInterfaceClassBean {
     public Set<Class<?>> getChildren() {
         return children;
     }
+
 
     private void fillParentsBean(Class<?> clazz) {
         LinkedHashSet<Class<?>> parentClazzSet = new LinkedHashSet<>();
