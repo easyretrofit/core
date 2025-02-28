@@ -16,8 +16,11 @@ public class JdkProxyExceptionHandler {
 
     public Object handle(Object proxy, Method method, Object[] args, Throwable throwable) throws Throwable {
         Throwable cause = throwable.getCause();
+
         if (cause instanceof RetrofitInterceptorException) {
             return getProxyExceptionObject(proxy, method, args, cause);
+        } else if (cause.getCause() instanceof RetrofitInterceptorException) {
+            return getProxyExceptionObject(proxy, method, args, cause.getCause());
         }
         throw throwable;
     }
@@ -34,7 +37,7 @@ public class JdkProxyExceptionHandler {
             try {
                 fallbackMethod = fallbackClazz.getDeclaredMethod(method.getName(), parameterTypesAndEx);
                 Object[] newArgs = new Object[parameterTypes.length + 1];
-                if (args != null){
+                if (args != null) {
                     System.arraycopy(args, 0, newArgs, 0, parameterTypes.length);
                 }
                 newArgs[parameterTypes.length] = cause;
