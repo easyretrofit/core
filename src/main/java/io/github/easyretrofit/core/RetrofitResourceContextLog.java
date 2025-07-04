@@ -137,15 +137,15 @@ public class RetrofitResourceContextLog {
         String clientString = retrofitBuilder.getClient().getSimpleName();
         String callFactoryString = retrofitBuilder.getCallFactory().getSimpleName();
         String validateEagerlyString = retrofitBuilder.isValidateEagerly() ? "true" : "false";
-        log.debug("|--BUILDER INFO: hostURL: {}; urlStatus: {}; globalEnable: {}; callAdapterFactory: {}; converterFactory:{}; callbackExecutor: {}; client: {}; callFactory: {}; validateEagerly: {}",
+        log.trace("|--BUILDER INFO: hostURL: {}; urlStatus: {}; globalEnable: {}; callAdapterFactory: {}; converterFactory:{}; callbackExecutor: {}; client: {}; callFactory: {}; validateEagerly: {}",
                 realHostUrl, retrofitClient.getUrlStatus(), globalEnable, CallAdapterFactoryString, ConverterFactoryString, callbackExecutorString, clientString, callFactoryString, validateEagerlyString);
         for (RetrofitInterceptorBean interceptor : retrofitClient.getInterceptors()) {
-            log.debug("|--INTERCEPTOR INFO: handler: {}", interceptor.getHandler());
-            log.debug("   |--type: {}", interceptor.getType());
-            log.debug("   |--defaultScopeClasses: {}", StringUtils.join(interceptor.getDefaultScopeClasses(), ","));
-            log.debug("   |--include: {}", StringUtils.join(interceptor.getInclude(), ","));
-            log.debug("   |--exclude: {}", StringUtils.join(interceptor.getExclude(), ","));
-            log.debug("   |--sort: {}", interceptor.getSort());
+            log.trace("|--INTERCEPTOR INFO: handler: {}", interceptor.getHandler());
+            log.trace("   |--type: {}", interceptor.getType());
+            log.trace("   |--defaultScopeClasses: {}", StringUtils.join(interceptor.getDefaultScopeClasses(), ","));
+            log.trace("   |--include: {}", StringUtils.join(interceptor.getInclude(), ","));
+            log.trace("   |--exclude: {}", StringUtils.join(interceptor.getExclude(), ","));
+            log.trace("   |--sort: {}", interceptor.getSort());
         }
 
     }
@@ -154,13 +154,13 @@ public class RetrofitResourceContextLog {
         Map<Class<?>, Set<RetrofitInterceptorBean>> parentInterceptors = getParentInterceptors(retrofitApiInterface, retrofitClient);
         for (Map.Entry<Class<?>, Set<RetrofitInterceptorBean>> entry : parentInterceptors.entrySet()) {
             for (RetrofitInterceptorBean retrofitInterceptorBean : entry.getValue()) {
-                log.debug("   |--INTERCEPTOR INFO: handler: {}", retrofitInterceptorBean.getHandler());
-                log.debug("      |--belongsTo: {}", entry.getKey());
-                log.debug("      |--type: {}", retrofitInterceptorBean.getType());
-                log.debug("      |--defaultScopeClasses: {}", StringUtils.join(retrofitInterceptorBean.getDefaultScopeClasses(), ","));
-                log.debug("      |--include: {}", StringUtils.join(retrofitInterceptorBean.getInclude(), ","));
-                log.debug("      |--exclude: {}", StringUtils.join(retrofitInterceptorBean.getExclude(), ","));
-                log.debug("      |--sort: {}", retrofitInterceptorBean.getSort());
+                log.trace("   |--INTERCEPTOR INFO: handler: {}", retrofitInterceptorBean.getHandler());
+                log.trace("      |--belongsTo: {}", entry.getKey());
+                log.trace("      |--type: {}", retrofitInterceptorBean.getType());
+                log.trace("      |--defaultScopeClasses: {}", StringUtils.join(retrofitInterceptorBean.getDefaultScopeClasses(), ","));
+                log.trace("      |--include: {}", StringUtils.join(retrofitInterceptorBean.getInclude(), ","));
+                log.trace("      |--exclude: {}", StringUtils.join(retrofitInterceptorBean.getExclude(), ","));
+                log.trace("      |--sort: {}", retrofitInterceptorBean.getSort());
             }
         }
     }
