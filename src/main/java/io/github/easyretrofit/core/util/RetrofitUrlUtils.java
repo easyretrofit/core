@@ -40,7 +40,7 @@ public class RetrofitUrlUtils {
                 baseUrl = toLowerUrl;
             } catch (IllegalArgumentException exception) {
                 toLowerUrl = null;
-                log.warn("The URL: {} could not be resolved, Retrofit Service will be discarded", baseUrl);
+                log.warn("The URL: [{}] could not be resolved, Retrofit Service will be discarded", baseUrl);
             }
         }
         if (StringUtils.isNotEmpty(currentUrl) || StringUtils.isNotEmpty(toLowerUrl)) {
