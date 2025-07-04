@@ -10,6 +10,7 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
+    <name>easyretrofit-core</name>
     <description>The function of core is to generate retrofit instances based on the DI framework and manage retrofit resource context</description>
     <artifactId>core</artifactId>
     <version>1.3.0</version>
