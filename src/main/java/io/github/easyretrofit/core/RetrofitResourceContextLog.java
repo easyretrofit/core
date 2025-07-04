@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
  */
 public class RetrofitResourceContextLog {
     private static final Logger log = LoggerFactory.getLogger(RetrofitResourceContextLog.class);
-    private final static String LOG_INFO = "::{} :: ({})\n";
+    private final static String DOUBLE_COLON = " :: ";
     private final RetrofitResourceContext context;
 
 
@@ -33,13 +33,13 @@ public class RetrofitResourceContextLog {
         getLogoInfo(logBean);
         int index = 0;
         for (RetrofitClientBean retrofitClient : context.getRetrofitClients()) {
-            log.info("==========================RETROFIT CLIENT INFO [{}] BEGIN==========================", index);
+            log.debug("==========================RETROFIT CLIENT INFO [{}] BEGIN==========================", index);
             final String retrofitInstanceName = retrofitClient.getRetrofitInstanceName();
             final String realHostUrl = retrofitClient.getRealHostUrl();
             if (retrofitClient.getUrlStatus().equals(UrlStatus.DYNAMIC_URL_ONLY)) {
-                log.warn("*--RETROFIT CLIENT INFO [{}]: hostURL[Dummy]: {}, retrofitInstanceName: {}", index, realHostUrl, retrofitInstanceName);
+                log.debug("*--RETROFIT CLIENT INFO [{}]: hostURL[Dummy]: {}, retrofitInstanceName: {}", index, realHostUrl, retrofitInstanceName);
             } else {
-                log.info("*--RETROFIT CLIENT INFO [{}]: hostURL: {}, retrofitInstanceName: {}", index, realHostUrl, retrofitInstanceName);
+                log.debug("*--RETROFIT CLIENT INFO [{}]: hostURL: {}, retrofitInstanceName: {}", index, realHostUrl, retrofitInstanceName);
             }
             retrofitClientDebugLog(retrofitClient);
             for (RetrofitApiInterfaceBean retrofitApiInterface : retrofitClient.getRetrofitApiInterfaceBeans()) {
@@ -51,14 +51,37 @@ public class RetrofitResourceContextLog {
                 }
                 final String self2ParentClasses = StringUtils.join(retrofitApiInterface.getSelf2ParentClasses(), "->");
                 final String childrenClasses = StringUtils.join(retrofitApiInterface.getChildrenClasses(), ",");
-                log.info("");
-                log.info("|--API INTERFACE INFO: name: {} , rootName: {}, self2RootPath: {}, childrenName: {}", selfClazz.getName(), parentClazzName, self2ParentClasses, childrenClasses);
+                log.debug("");
+                log.debug("|--API INTERFACE INFO: name: {} , rootName: {}, self2RootPath: {}, childrenName: {}", selfClazz.getName(), parentClazzName, self2ParentClasses, childrenClasses);
                 retrofitApiInterfaceDebugLog(retrofitApiInterface, retrofitClient);
             }
-            log.info("==========================RETROFIT CLIENT INFO [{}] END==========================", index);
-            log.info("");
+            log.debug("==========================RETROFIT CLIENT INFO [{}] END==========================", index);
+            log.debug("");
             index++;
         }
+    }
+
+
+    private void SystemOutPrintln(String... messages) {
+
+        String ANSI_GREEN = "\u001B[32m";
+        String ANSI_RESET = "\u001B[0m";
+        if (messages == null || messages.length == 0) {
+            return;
+        }
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(ANSI_GREEN);
+        // 处理前面的所有参数（除了最后一个）
+        for (int i = 0; i < messages.length - 1; i++) {
+            sb.append(DOUBLE_COLON).append(messages[i]);
+        }
+        sb.append(DOUBLE_COLON);
+        sb.append(ANSI_RESET);
+        // 处理最后一个参数
+        sb.append("(").append(messages[messages.length - 1]).append(")");
+
+        System.out.println(sb);
     }
 
     private void getLogoInfo(RetrofitWebFramewrokInfoBean logBean) {
@@ -67,46 +90,41 @@ public class RetrofitResourceContextLog {
                 "| __|/  \\ /' _| `v' /__| _ \\ __|_   _| _ \\/__\\| __| |_   _| \n" +
                 "| _|| /\\ |`._`.`. .'|__| v / _|  | | | v / \\/ | _|| | | |   \n" +
                 "|___|_||_||___/ !_!    |_|_\\___| |_| |_|_\\\\__/|_| |_| |_|   \n";
-//        String logo = "\n" +
-//                "____ ___  ___  _         ____ ____ ____ ____ ____ ____ ____ ____ \n" +
-//                "| __\\|  \\ | _\\ ||_/\\ ___ | . \\| __\\|_ _\\| . \\|   ||  _\\|___\\|_ _\\\n" +
-//                "|  ]_| . \\[__ \\| __/|___\\|  <_|  ]_  || |  <_| . || _\\ | /    || \n" +
-//                "|___/|/\\_/|___/|/        |/\\_/|___/  |/ |/\\_/|___/|/   |/     |/ \n";
-        StringBuilder sb = new StringBuilder();
-        sb.append(logo);
-        List<String> params = new ArrayList<>();
-        //add retrofit info
-        sb.append(LOG_INFO);
+        System.out.println(logo);
+
         Package pkgInfo = this.getClass().getPackage();
+
+        List<String> params = new ArrayList<>();
         params.add(pkgInfo.getSpecificationTitle());
         params.add(pkgInfo.getSpecificationVersion());
+        SystemOutPrintln(pkgInfo.getSpecificationTitle(), pkgInfo.getSpecificationVersion());
+
         //add easy-retrofit info
-        sb.append(LOG_INFO);
         params.add(appendEasyRetrofit(pkgInfo.getImplementationTitle()));
         params.add(pkgInfo.getImplementationVersion());
+        SystemOutPrintln(appendEasyRetrofit(pkgInfo.getImplementationTitle()), pkgInfo.getImplementationVersion());
+
         if (logBean.getTitle() != null && logBean.getVersion() != null) {
-            sb.append(LOG_INFO);
             params.add(logBean.getTitle() == null ? "" : appendEasyRetrofit(logBean.getTitle()));
             params.add(logBean.getVersion() == null ? "" : logBean.getVersion());
+            SystemOutPrintln(logBean.getTitle() == null ? "" : appendEasyRetrofit(logBean.getTitle()), logBean.getVersion() == null ? "" : logBean.getVersion());
 
             Class<?> builderExtensionClazz = context.getRetrofitBuilderExtensionClazz();
             if (builderExtensionClazz.getPackage().getImplementationTitle() != null && !params.stream().anyMatch(s -> s.equals(appendEasyRetrofit(logBean.getTitle())))) {
-                sb.append(LOG_INFO);
                 params.add(appendEasyRetrofit(builderExtensionClazz.getPackage().getImplementationTitle()));
                 params.add(builderExtensionClazz.getPackage().getImplementationVersion());
+                SystemOutPrintln(appendEasyRetrofit(builderExtensionClazz.getPackage().getImplementationTitle()), builderExtensionClazz.getPackage().getImplementationVersion());
             }
             List<Class<?>> interceptorExtensionsClasses = context.getInterceptorExtensionsClasses();
             for (Class<?> interceptorExtensionsClass : interceptorExtensionsClasses) {
                 if (interceptorExtensionsClass.getPackage().getImplementationTitle() == null) {
                     continue;
                 }
-                sb.append(LOG_INFO);
                 params.add(appendEasyRetrofit(interceptorExtensionsClass.getPackage().getImplementationTitle()));
                 params.add(interceptorExtensionsClass.getPackage().getImplementationVersion());
+                SystemOutPrintln(appendEasyRetrofit(interceptorExtensionsClass.getPackage().getImplementationTitle()), interceptorExtensionsClass.getPackage().getImplementationVersion());
             }
         }
-        String logStr = sb.toString();
-        log.info(logStr, params.toArray());
     }
 
     private void retrofitClientDebugLog(RetrofitClientBean retrofitClient) {
@@ -166,9 +184,6 @@ public class RetrofitResourceContextLog {
         if (title != null) {
             return searchStr + " :: " + title;
         }
-//        if (title != null && !io.github.easyretrofit.core.util.StringUtils.contains(title, searchStr) && !io.github.easyretrofit.core.util.StringUtils.startsWithPrefix(title, searchStr)) {
-//            return searchStr + " :: " + title;
-//        }
         return null;
     }
 }
