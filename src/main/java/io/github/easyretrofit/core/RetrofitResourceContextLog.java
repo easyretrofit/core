@@ -95,9 +95,6 @@ public class RetrofitResourceContextLog {
         Package pkgInfo = this.getClass().getPackage();
 
         List<String> params = new ArrayList<>();
-        params.add(pkgInfo.getSpecificationTitle());
-        params.add(pkgInfo.getSpecificationVersion());
-        SystemOutPrintln(pkgInfo.getSpecificationTitle(), pkgInfo.getSpecificationVersion());
 
         //add easy-retrofit info
         params.add(appendEasyRetrofit(pkgInfo.getImplementationTitle()));
