@@ -15,7 +15,7 @@
         resource context
     </description>
     <artifactId>core</artifactId>
-    <version>1.4.1</version>
+    <version>1.4.2</version>
     <packaging>jar</packaging>
 
     <url>https://github.com/easyretrofit/${project.artifactId}</url>
